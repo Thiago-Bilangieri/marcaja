@@ -42,12 +42,14 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 - **Login com JWT**: o token é guardado no navegador, enviado automaticamente nos pedidos à API e descartado quando expira.
 - **Rotas protegidas**: `/account` exige sessão; `/login` e `/register` redirecionam quem já tem sessão.
 - **Erros da API traduzidos**: credenciais erradas, conta pendente, email repetido, demasiadas tentativas (com o tempo de espera do `Retry-After`) e API indisponível.
-- **Serviços**: lista com filtro por categoria e pesquisa por nome, preço em euros e duração.
+- **Serviços**: lista com filtro por categoria e pesquisa pelo nome do serviço ou do profissional (sem distinguir acentos), preço em euros e duração.
 - **Marcar**: escolher o dia (próximos 14 dias), ver os horários livres e confirmar com observações. Se outro cliente ocupar o horário entretanto (`409`), a lista atualiza-se e o utilizador é avisado.
 - **As minhas marcações**: próximas e histórico, com o estado de cada marcação e cancelamento com confirmação.
-- **Agenda do profissional**: marcações recebidas em três grupos (por fechar, próximas e histórico). Os botões Confirmar, Concluir, Falta e Cancelar só aparecem quando a API os permite (por exemplo, concluir só depois da hora de início).
+- **Agenda do profissional**: marcações recebidas em três grupos (por fechar, próximas e histórico). Os botões Confirmar, Concluir, Falta e Cancelar só aparecem quando a API os permite (por exemplo, concluir só depois da hora de início). Cancelar pede um motivo, que o cliente vê na marcação ("Cancelada pelo profissional: ...").
 - **Horário de trabalho**: blocos por dia da semana (por exemplo, manhã e tarde), com validação no formulário (fim depois do início, sem blocos sobrepostos), guardados de uma vez.
 - **Menu e página inicial por perfil**: o cliente vai para as suas marcações e o profissional para a agenda; os endereços da outra área redirecionam.
+- **O meu perfil** (todos os perfis, a partir do menu da conta no cabeçalho): editar nome e telefone, mudar o email e a palavra-passe (pedem a palavra-passe atual; a API emite um token novo e termina as outras sessões) e eliminar a conta (RGPD: os dados pessoais são anonimizados, com confirmação explícita).
+- **Política de palavra-passe** igual à da API (8+ caracteres, letras e números), validada no formulário antes de enviar.
 
 ### Roadmap
 
@@ -56,6 +58,7 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 - [x] **Fase 2:** área do cliente (serviços → disponibilidade → marcar → as minhas marcações → cancelar)
 - [x] **Fase 3:** área do profissional (confirmar, concluir, falta, horário de trabalho)
 - [x] **Fase 4:** área do administrador (aprovar profissionais)
+- [x] **Fase 4b:** perfil do utilizador (dados, email, palavra-passe, eliminar conta) e motivo de cancelamento
 - [ ] **Fase 5:** deploy (Vercel) ligado à API em produção
 
 ### Tecnologias e conceitos
@@ -118,6 +121,7 @@ src/
     │   ├── auth/            # Serviço Auth, modelos, interceptor JWT, guards (sessão e perfil)
     │   ├── booking/         # Serviço Booking (httpResource) e regras das marcações
     │   ├── professional/    # Horário de trabalho do profissional (endpoints /me)
+    │   ├── profile/         # Perfil de quem tem sessão (/api/users/me), partilhado pelo menu e pela página
     │   ├── api/             # Página genérica e tradução dos erros HTTP da API
     │   └── i18n/            # Serviço I18n e dicionários pt-PT / EN
     └── pages/
@@ -127,7 +131,8 @@ src/
         ├── services/        # Lista de serviços com filtros
         ├── book/            # Escolher dia e hora e marcar
         ├── account/         # As minhas marcações (cliente)
-        ├── agenda/          # Agenda do profissional: confirmar, concluir, falta
+        ├── agenda/          # Agenda do profissional: confirmar, concluir, falta, cancelar com motivo
+        ├── profile/         # O meu perfil: uma secção (componente) por tarefa
         └── schedule/        # Horário de trabalho semanal (FormArray)
 ```
 
@@ -160,8 +165,9 @@ Tipografia: **Inter** · Ícones: **Material Symbols**
 - **JWT sign-in**: the token is stored in the browser, attached to API requests by an HTTP interceptor and dropped when it expires.
 - **Protected routes** with `authGuard`, `guestGuard` and a role-based `roleGuard`; each role lands on its own home page.
 - **Translated API errors**: wrong credentials, pending account, duplicated email, too many attempts (using `Retry-After`) and API unavailable.
-- **Customer area**: browse services by category or name, pick a day and a free slot, book with notes, see upcoming and past appointments and cancel them. A slot taken in the meantime (`409`) refreshes the list and warns the user.
-- **Professional area**: an agenda grouped into to close / upcoming / history, with confirm, complete, no-show and cancel shown only when the API allows them; a weekly working-hours editor with dynamic time blocks validated in the form (end after start, no overlaps).
+- **Customer area**: browse services by category or search by service or professional name (accent-insensitive), pick a day and a free slot, book with notes, see upcoming and past appointments and cancel them. A slot taken in the meantime (`409`) refreshes the list and warns the user.
+- **Professional area**: an agenda grouped into to close / upcoming / history, with confirm, complete, no-show and cancel shown only when the API allows them (cancelling asks for a reason the customer can see); a weekly working-hours editor with dynamic time blocks validated in the form (end after start, no overlaps).
+- **My profile** (every role, from the account menu in the header): edit name and phone, change email and password (both ask for the current password; the API issues a new token and signs out other sessions) and delete the account (GDPR: personal data is anonymised, with explicit confirmation). The password policy matches the API and is checked before submitting.
 
 ### Stack
 
@@ -184,7 +190,7 @@ Sign in with `joao.silva@email.com` / `password` (test customer) or `ana.ribeiro
 
 ### Roadmap
 
-Brand theme and home page ✅ → sign-in/sign-up with JWT, PT/EN UI ✅ → customer area ✅ → professional area ✅ → admin area → deploy.
+Brand theme and home page ✅ → sign-in/sign-up with JWT, PT/EN UI ✅ → customer area ✅ → professional area ✅ → admin area ✅ → user profile ✅ → deploy.
 
 ---
 

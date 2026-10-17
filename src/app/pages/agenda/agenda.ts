@@ -1,5 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -17,7 +19,13 @@ import { AppointmentDetails } from '../account/appointment-details';
 
 // Agenda do profissional: fechar as que já começaram, confirmar ou cancelar as próximas, ver o histórico
 @Component({
-  imports: [AppointmentDetails, MatButtonModule, MatProgressSpinnerModule],
+  imports: [
+    AppointmentDetails,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+  ],
   selector: 'mj-agenda',
   styleUrl: '../account/account.scss',
   templateUrl: './agenda.html',
@@ -44,16 +52,33 @@ export class Agenda {
 
   protected readonly canConfirm = (a: Appointment) => canConfirm(a, this.now);
 
-  // Cancelar pede confirmação; enquanto um pedido corre, os botões dessa marcação ficam desativados
+  // Cancelar pede confirmação e um motivo (obrigatório na API para o profissional; o cliente vai vê-lo).
+  // Enquanto um pedido corre, os botões dessa marcação ficam desativados
   protected readonly confirmingCancelId = signal<number | null>(null);
+  protected readonly cancelReason = signal('');
+  protected readonly hasReason = computed(() => this.cancelReason().trim().length > 0);
   protected readonly busyId = signal<number | null>(null);
 
   protected updateStatus(appointment: Appointment, action: StatusAction): void {
-    this.run(appointment, this.booking.updateStatus(appointment.id, action), this.t().agenda.updated[action]);
+    this.run(
+      appointment,
+      this.booking.updateStatus(appointment.id, action),
+      this.t().agenda.updated[action],
+    );
+  }
+
+  protected askCancel(appointment: Appointment): void {
+    this.cancelReason.set('');
+    this.confirmingCancelId.set(appointment.id);
+  }
+
+  protected onReason(event: Event): void {
+    this.cancelReason.set((event.target as HTMLTextAreaElement).value);
   }
 
   protected cancel(appointment: Appointment): void {
-    this.run(appointment, this.booking.cancelAppointment(appointment.id), this.t().appointments.cancelled);
+    const request = this.booking.cancelAppointment(appointment.id, this.cancelReason());
+    this.run(appointment, request, this.t().appointments.cancelled);
   }
 
   // Corre o pedido, avisa o resultado e volta a carregar a lista (a marcação muda de secção)

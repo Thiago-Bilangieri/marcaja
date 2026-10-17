@@ -1,3 +1,5 @@
+import { Role } from '../auth/auth.models';
+
 // Espelham os DTOs da Agendamento API. As datas vêm como "2026-10-21T09:00:00",
 // sem fuso: são a hora local do negócio (Europe/Lisbon).
 
@@ -22,7 +24,8 @@ export interface ServiceItem {
 
 export interface ServiceFilter {
   categoryId?: number | null;
-  name?: string;
+  // Texto livre: a API procura no nome do serviço e no do profissional, sem distinguir acentos
+  q?: string;
 }
 
 export interface TimeSlot {
@@ -42,6 +45,9 @@ export interface Appointment {
   endAt: string;
   status: AppointmentStatus;
   notes: string | null;
+  // Só preenchidos quando a marcação foi cancelada (null nas canceladas antes do histórico existir)
+  cancelledByRole: Role | null;
+  cancellationReason: string | null;
 }
 
 export interface AppointmentCreateRequest {

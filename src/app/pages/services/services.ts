@@ -39,7 +39,7 @@ export class Services {
   protected readonly categories = this.booking.categories();
   protected readonly services = this.booking.services(() => ({
     categoryId: this.categoryId(),
-    name: this.query(),
+    q: this.query(),
   }));
 
   // Só o cliente marca para si próprio; os outros perfis veem a lista sem o botão

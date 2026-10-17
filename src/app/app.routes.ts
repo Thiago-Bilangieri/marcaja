@@ -33,6 +33,12 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard('CUSTOMER', 'ADMIN')],
     loadComponent: () => import('./pages/account/account').then((m) => m.Account),
   },
+  // Perfil: igual para os três perfis (dados, email, palavra-passe, eliminar conta)
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/profile/profile').then((m) => m.Profile),
+  },
   // Área do profissional: um cliente que abra estes endereços é enviado para /account
   {
     path: 'agenda',

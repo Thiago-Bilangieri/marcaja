@@ -37,6 +37,11 @@
   gap: 8px;
 }
 
+// Motivo do cancelamento na agenda do profissional
+.reason {
+  width: min(100%, 360px);
+}
+
 .danger {
   --mat-button-filled-container-color: #b91c1c;
   --mat-button-filled-label-text-color: #ffffff;

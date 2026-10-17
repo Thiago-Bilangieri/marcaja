@@ -1,0 +1,47 @@
+<h2 id="delete-title">{{ t().profile.delete.title }}</h2>
+
+@if (isAdmin()) {
+  <p class="card-description">{{ t().profile.delete.adminNotAllowed }}</p>
+} @else {
+  <p class="card-description">{{ t().profile.delete.description }}</p>
+  @if (isProfessional()) {
+    <p class="form-info">{{ t().profile.delete.professionalNote }}</p>
+  }
+
+  @if (errorMessage(); as message) {
+    <p class="form-error" role="alert">
+      <span class="material-symbols-outlined" aria-hidden="true">error</span>
+      {{ message }}
+    </p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="remove()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ t().profile.currentPassword }}</mat-label>
+      <input
+        matInput
+        type="password"
+        formControlName="currentPassword"
+        autocomplete="current-password"
+      />
+      @if (form.controls.currentPassword.hasError('required')) {
+        <mat-error>{{ t().form.required }}</mat-error>
+      } @else if (form.controls.currentPassword.hasError('incorrect')) {
+        <mat-error>{{ t().profile.wrongPassword }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-checkbox formControlName="understood">{{ t().profile.delete.understood }}</mat-checkbox>
+
+    <div class="card-actions">
+      <button
+        matButton="filled"
+        type="submit"
+        class="danger"
+        [disabled]="deleting() || !form.controls.understood.value"
+      >
+        {{ t().profile.delete.submit }}
+      </button>
+    </div>
+  </form>
+}

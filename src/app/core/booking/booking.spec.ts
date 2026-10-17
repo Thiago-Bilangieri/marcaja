@@ -26,6 +26,8 @@ function appointment(status: AppointmentStatus, startAt: string): Appointment {
     endAt: startAt,
     status,
     notes: null,
+    cancelledByRole: null,
+    cancellationReason: null,
   };
 }
 
@@ -76,12 +78,12 @@ describe('Booking', () => {
   it('services() sends only the filters that are set and refetches when they change', async () => {
     const categoryId = signal<number | null>(null);
     const services = TestBed.runInInjectionContext(() =>
-      booking.services(() => ({ categoryId: categoryId(), name: '  corte ' })),
+      booking.services(() => ({ categoryId: categoryId(), q: '  ana ' })),
     );
 
     TestBed.tick();
     const first = http.expectOne((r) => r.url === `${API}/services`);
-    expect(first.request.params.get('name')).toBe('corte');
+    expect(first.request.params.get('q')).toBe('ana');
     expect(first.request.params.has('categoryId')).toBe(false);
     first.flush({ content: [], page: { size: 100, number: 0, totalElements: 0, totalPages: 0 } });
 
@@ -119,7 +121,20 @@ describe('Booking', () => {
     booking.cancelAppointment(7).subscribe();
     const cancel = http.expectOne(`${API}/appointments/7/cancel`);
     expect(cancel.request.method).toBe('PATCH');
+    expect(cancel.request.body).toBeNull();
     cancel.flush(appointment('CANCELLED', '2026-10-21T09:00:00'));
+  });
+
+  it('cancelAppointment sends the trimmed reason when there is one', () => {
+    booking.cancelAppointment(7, '  Estou doente  ').subscribe();
+    const cancel = http.expectOne(`${API}/appointments/7/cancel`);
+    expect(cancel.request.body).toEqual({ reason: 'Estou doente' });
+    cancel.flush(appointment('CANCELLED', '2026-10-21T09:00:00'));
+
+    booking.cancelAppointment(8, '   ').subscribe();
+    const blank = http.expectOne(`${API}/appointments/8/cancel`);
+    expect(blank.request.body).toBeNull();
+    blank.flush(appointment('CANCELLED', '2026-10-21T09:00:00'));
   });
 
   it('updateStatus sends a PATCH to the action endpoint', () => {

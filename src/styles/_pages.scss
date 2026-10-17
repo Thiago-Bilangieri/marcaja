@@ -64,3 +64,26 @@
     background: var(--mj-status-no-show);
   }
 }
+
+// Menu da conta (app.html). O mat-menu é desenhado num overlay fora do componente,
+// por isso os estilos do conteúdo ficam aqui, nos globais
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 16px 12px;
+  border-bottom: 1px solid var(--mj-border);
+  color: var(--mj-text);
+  overflow-wrap: anywhere;
+
+  span {
+    color: var(--mj-text-muted);
+    font-size: 0.875rem;
+  }
+}
+
+.menu-icon {
+  margin-right: 12px;
+  color: var(--mj-text-muted);
+  vertical-align: middle;
+}

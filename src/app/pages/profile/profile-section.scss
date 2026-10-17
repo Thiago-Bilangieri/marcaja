@@ -1,0 +1,33 @@
+// Partilhado pelas secções do perfil (dados, email, palavra-passe, eliminar conta)
+h2 {
+  margin: 0 0 4px;
+  font-size: 1.125rem;
+}
+
+.card-description {
+  margin: 0 0 16px;
+  color: var(--mj-text-muted);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.danger {
+  --mat-button-filled-container-color: #b91c1c;
+  --mat-button-filled-label-text-color: #ffffff;
+}

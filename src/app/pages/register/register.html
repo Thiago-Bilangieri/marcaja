@@ -66,10 +66,11 @@
               {{ hidePassword() ? 'visibility' : 'visibility_off' }}
             </span>
           </button>
+          <mat-hint>{{ t().form.passwordPolicy }}</mat-hint>
           @if (form.controls.password.hasError('required')) {
             <mat-error>{{ t().form.required }}</mat-error>
-          } @else if (form.controls.password.hasError('minlength')) {
-            <mat-error>{{ t().form.passwordMinLength }}</mat-error>
+          } @else if (form.controls.password.hasError('strongPassword')) {
+            <mat-error>{{ t().form.passwordPolicy }}</mat-error>
           }
         </mat-form-field>
 
@@ -83,7 +84,9 @@
           </mat-form-field>
         }
 
-        <button matButton="filled" type="submit" [disabled]="loading()">{{ t().register.submit }}</button>
+        <button matButton="filled" type="submit" [disabled]="loading()">
+          {{ t().register.submit }}
+        </button>
       </form>
 
       <p class="auth-footer">

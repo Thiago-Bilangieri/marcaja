@@ -24,6 +24,14 @@ import { I18n } from '../../core/i18n/i18n';
     @if (a.notes) {
       <span class="muted">“{{ a.notes }}”</span>
     }
+    @if (a.status === 'CANCELLED' && a.cancelledByRole) {
+      <span class="cancelled">
+        {{ t().appointments.cancelledBy[a.cancelledByRole] }}
+        @if (a.cancellationReason) {
+          : “{{ a.cancellationReason }}”
+        }
+      </span>
+    }
   `,
   styles: `
     :host {
@@ -37,6 +45,10 @@ import { I18n } from '../../core/i18n/i18n';
     }
     .muted {
       color: var(--mj-text-muted);
+    }
+    .cancelled {
+      color: var(--mj-text);
+      font-size: 0.875rem;
     }
     .when {
       display: inline-flex;

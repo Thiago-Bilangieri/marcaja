@@ -1,10 +1,14 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { translations } from '../i18n/translations';
-import { apiErrorMessage } from './api-error';
+import { apiErrorMessage, apiFieldErrors } from './api-error';
 
 const t = translations.en;
 
-function httpError(status: number, error: unknown = null, headers?: HttpHeaders): HttpErrorResponse {
+function httpError(
+  status: number,
+  error: unknown = null,
+  headers?: HttpHeaders,
+): HttpErrorResponse {
   return new HttpErrorResponse({ status, error, headers });
 }
 
@@ -17,7 +21,9 @@ describe('apiErrorMessage', () => {
 
   it('uses Retry-After to tell how long the login is locked', () => {
     const error = httpError(429, null, new HttpHeaders({ 'Retry-After': '600' }));
-    expect(apiErrorMessage(error, t, 'login')).toBe('Too many failed attempts. Try again in 10 min.');
+    expect(apiErrorMessage(error, t, 'login')).toBe(
+      'Too many failed attempts. Try again in 10 min.',
+    );
   });
 
   it('maps booking errors', () => {
@@ -28,10 +34,28 @@ describe('apiErrorMessage', () => {
     expect(apiErrorMessage(httpError(403), t, 'booking')).toBe(t.errors.actionFailed);
   });
 
-  it('tells a duplicated email apart from invalid fields on register', () => {
-    expect(apiErrorMessage(httpError(400, { detail: 'Já existe...' }), t, 'register')).toBe(t.errors.emailTaken);
-    expect(apiErrorMessage(httpError(400, { errors: { email: 'Email inválido' } }), t, 'register')).toBe(
-      t.errors.invalidData,
+  it('maps profile errors: duplicated email, upcoming appointments and field errors', () => {
+    expect(apiErrorMessage(httpError(400, { detail: 'Já existe...' }), t, 'email')).toBe(
+      t.errors.emailTaken,
     );
+    expect(apiErrorMessage(httpError(409), t, 'profile')).toBe(t.errors.hasUpcoming);
+
+    const wrongPassword = httpError(400, {
+      errors: { currentPassword: 'A password atual está incorreta.' },
+    });
+    expect(apiFieldErrors(wrongPassword)).toEqual({
+      currentPassword: 'A password atual está incorreta.',
+    });
+    expect(apiFieldErrors(httpError(400, { detail: 'Já existe...' }))).toBeNull();
+    expect(apiFieldErrors(httpError(409))).toBeNull();
+  });
+
+  it('tells a duplicated email apart from invalid fields on register', () => {
+    expect(apiErrorMessage(httpError(400, { detail: 'Já existe...' }), t, 'register')).toBe(
+      t.errors.emailTaken,
+    );
+    expect(
+      apiErrorMessage(httpError(400, { errors: { email: 'Email inválido' } }), t, 'register'),
+    ).toBe(t.errors.invalidData);
   });
 });

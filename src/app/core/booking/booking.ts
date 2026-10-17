@@ -32,13 +32,13 @@ export class Booking {
 
   services(filter: () => ServiceFilter) {
     return httpResource<Page<ServiceItem>>(() => {
-      const { categoryId, name } = filter();
+      const { categoryId, q } = filter();
       return {
         url: `${this.api}/services`,
         params: {
           size: 100,
           ...(categoryId ? { categoryId } : {}),
-          ...(name?.trim() ? { name: name.trim() } : {}),
+          ...(q?.trim() ? { q: q.trim() } : {}),
         },
       };
     });
@@ -70,8 +70,10 @@ export class Booking {
     return this.http.post<Appointment>(`${this.api}/appointments`, request);
   }
 
-  cancelAppointment(id: number): Observable<Appointment> {
-    return this.http.patch<Appointment>(`${this.api}/appointments/${id}/cancel`, null);
+  // O motivo é obrigatório para o profissional e opcional para o cliente (sem motivo, vai sem corpo)
+  cancelAppointment(id: number, reason?: string): Observable<Appointment> {
+    const body = reason?.trim() ? { reason: reason.trim() } : null;
+    return this.http.patch<Appointment>(`${this.api}/appointments/${id}/cancel`, body);
   }
 
   updateStatus(id: number, action: StatusAction): Observable<Appointment> {

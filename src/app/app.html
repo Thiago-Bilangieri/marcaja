@@ -16,7 +16,25 @@
       @if (isAdmin()) {
         <a matButton routerLink="/admin">{{ t().app.admin }}</a>
       }
-      <button matButton (click)="logout()">{{ t().app.logout }}</button>
+      <button matButton class="user-button" [matMenuTriggerFor]="userMenu">
+        <span class="avatar" aria-hidden="true">{{ userInitials() }}</span>
+        <span class="user-name">{{ displayName() }}</span>
+        <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+      </button>
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <div class="menu-header">
+          <strong>{{ displayName() }}</strong>
+          <span>{{ auth.currentUser()?.email }}</span>
+        </div>
+        <a mat-menu-item routerLink="/profile">
+          <span class="material-symbols-outlined menu-icon" aria-hidden="true">person</span>
+          {{ t().app.profile }}
+        </a>
+        <button mat-menu-item (click)="logout()">
+          <span class="material-symbols-outlined menu-icon" aria-hidden="true">logout</span>
+          {{ t().app.logout }}
+        </button>
+      </mat-menu>
     } @else {
       <a matButton routerLink="/login">{{ t().app.login }}</a>
       <a matButton="filled" routerLink="/register">{{ t().app.register }}</a>

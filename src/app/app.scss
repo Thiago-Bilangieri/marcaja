@@ -41,6 +41,28 @@
   gap: 8px;
 }
 
+// Botão do menu da conta: iniciais + primeiro nome
+.user-button .avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--mj-primary);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.user-name {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 mat-button-toggle-group {
   --mat-button-toggle-height: 36px;
   margin-left: 8px;

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Service, computed, inject, signal } from '@angular/core';
-import { Observable, map, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   AuthResponse,
@@ -24,10 +24,17 @@ export class Auth {
   readonly isAuthenticated = computed(() => this.session() !== null);
 
   login(request: LoginRequest): Observable<Session> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, request).pipe(
-      map((response) => ({ ...response, expiresAt: readExpiration(response.token) })),
-      tap((session) => this.saveSession(session)),
-    );
+    return this.http
+      .post<AuthResponse>(`${this.baseUrl}/login`, request)
+      .pipe(map((response) => this.startSession(response)));
+  }
+
+  // Também usado quando a API emite um token novo (mudança de email ou de palavra-passe):
+  // o antigo deixa de ser aceite, por isso tem de ser substituído logo
+  startSession(response: AuthResponse): Session {
+    const session = { ...response, expiresAt: readExpiration(response.token) };
+    this.saveSession(session);
+    return session;
   }
 
   // O cliente pode entrar logo a seguir ao registo (201), por isso fazemos login automático

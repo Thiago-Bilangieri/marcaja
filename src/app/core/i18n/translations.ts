@@ -15,6 +15,7 @@ const ptPT = {
     agenda: 'Agenda',
     schedule: 'Horário',
     admin: 'Profissionais',
+    profile: 'O meu perfil',
     logout: 'Sair',
   },
   home: {
@@ -34,7 +35,8 @@ const ptPT = {
       {
         icon: 'verified_user',
         title: 'Profissionais aprovados',
-        description: 'Cada profissional é aprovado por um administrador antes de começar a atender.',
+        description:
+          'Cada profissional é aprovado por um administrador antes de começar a atender.',
       },
       {
         icon: 'lock',
@@ -50,7 +52,7 @@ const ptPT = {
     phone: 'Telefone',
     required: 'Campo obrigatório',
     invalidEmail: 'Email inválido',
-    passwordMinLength: 'Mínimo de 8 caracteres',
+    passwordPolicy: 'Mínimo de 8 caracteres, com pelo menos uma letra e um número.',
     showPassword: 'Mostrar palavra-passe',
     hidePassword: 'Esconder palavra-passe',
   },
@@ -67,7 +69,8 @@ const ptPT = {
     accountType: 'Tipo de conta',
     customer: 'Cliente',
     professional: 'Profissional',
-    professionalInfo: 'A conta de profissional fica pendente até ser aprovada por um administrador.',
+    professionalInfo:
+      'A conta de profissional fica pendente até ser aprovada por um administrador.',
     submit: 'Criar conta',
     hasAccount: 'Já tem conta?',
     loginLink: 'Entrar',
@@ -81,7 +84,7 @@ const ptPT = {
     subtitle: 'Escolha um serviço para ver os horários livres.',
     categories: 'Categorias',
     all: 'Todas',
-    search: 'Pesquisar serviço',
+    search: 'Pesquisar serviço ou profissional',
     with: 'com',
     book: 'Marcar',
     empty: 'Nenhum serviço encontrado.',
@@ -109,6 +112,11 @@ const ptPT = {
     keep: 'Manter',
     cancelQuestion: 'Cancelar esta marcação?',
     cancelled: 'Marcação cancelada.',
+    cancelledBy: {
+      CUSTOMER: 'Cancelada pelo cliente',
+      PROFESSIONAL: 'Cancelada pelo profissional',
+      ADMIN: 'Cancelada pelo administrador',
+    },
   },
   agenda: {
     title: 'Agenda',
@@ -117,12 +125,15 @@ const ptPT = {
     toCloseHint: 'Já começaram: indique se o cliente compareceu.',
     upcoming: 'Próximas',
     history: 'Histórico',
-    emptyToClose: 'Nada por fechar.',
+    emptyToClose:
+      'Nada por fechar. Depois da hora de início, as marcações aparecem aqui para registar se o cliente compareceu ou faltou.',
     emptyUpcoming: 'Não tem marcações futuras.',
     emptyHistory: 'Ainda não tem histórico.',
     confirm: 'Confirmar',
     complete: 'Concluir',
     noShow: 'Falta',
+    cancelReason: 'Motivo do cancelamento',
+    cancelReasonHint: 'O cliente vai ver este motivo.',
     customer: 'Cliente',
     updated: {
       confirm: 'Marcação confirmada.',
@@ -148,7 +159,8 @@ const ptPT = {
   },
   admin: {
     title: 'Profissionais',
-    subtitle: 'Aprove quem se registou como profissional. Só os aprovados podem entrar e receber marcações.',
+    subtitle:
+      'Aprove quem se registou como profissional. Só os aprovados podem entrar e receber marcações.',
     filterLabel: 'Estado da aprovação',
     tabs: {
       PENDING: 'Pendentes',
@@ -167,6 +179,50 @@ const ptPT = {
     updated: {
       approve: '{name} foi aprovado(a).',
       reject: '{name} foi rejeitado(a).',
+    },
+  },
+  profile: {
+    title: 'O meu perfil',
+    subtitle: 'Gira os seus dados pessoais, o email de acesso e a palavra-passe.',
+    summary: 'Resumo da conta',
+    memberSince: 'membro desde',
+    save: 'Guardar alterações',
+    discard: 'Descartar',
+    currentPassword: 'Palavra-passe atual',
+    wrongPassword: 'A palavra-passe atual está incorreta.',
+    sessionsNote: 'Por segurança, as sessões abertas noutros dispositivos são terminadas.',
+    details: {
+      title: 'Dados pessoais',
+      description: 'O seu nome aparece nas marcações.',
+      saved: 'Dados guardados.',
+    },
+    email: {
+      title: 'Email de acesso',
+      current: 'Email atual:',
+      newEmail: 'Novo email',
+      sameEmail: 'Este já é o seu email.',
+      submit: 'Mudar email',
+      saved: 'Email alterado. Use o novo email da próxima vez que entrar.',
+    },
+    password: {
+      title: 'Palavra-passe',
+      newPassword: 'Nova palavra-passe',
+      confirm: 'Confirmar nova palavra-passe',
+      mismatch: 'As palavras-passe não coincidem.',
+      sameAsCurrent: 'A nova palavra-passe tem de ser diferente da atual.',
+      submit: 'Mudar palavra-passe',
+      saved: 'Palavra-passe alterada.',
+    },
+    delete: {
+      title: 'Eliminar conta',
+      description:
+        'Os seus dados pessoais são apagados e deixa de poder entrar. As marcações futuras são canceladas; o histórico fica anónimo para o profissional.',
+      professionalNote:
+        'Antes de eliminar a conta, cancele as suas marcações futuras na Agenda. Os seus serviços deixam de estar disponíveis.',
+      adminNotAllowed: 'As contas de administrador não podem ser eliminadas a partir do perfil.',
+      understood: 'Compreendo que esta ação é definitiva e não pode ser desfeita.',
+      submit: 'Eliminar a minha conta',
+      done: 'A sua conta foi eliminada.',
     },
   },
   days: {
@@ -196,13 +252,16 @@ const ptPT = {
     close: 'Fechar',
   },
   errors: {
-    network: 'Não foi possível contactar o servidor. Se a API estiver a acordar, aguarde um minuto e tente novamente.',
+    network:
+      'Não foi possível contactar o servidor. Se a API estiver a acordar, aguarde um minuto e tente novamente.',
     invalidCredentials: 'Email ou palavra-passe incorretos.',
-    accountBlocked: 'Esta conta ainda não pode entrar: aguarda aprovação, foi rejeitada ou está desativada.',
+    accountBlocked:
+      'Esta conta ainda não pode entrar: aguarda aprovação, foi rejeitada ou está desativada.',
     tooManyAttempts: 'Demasiadas tentativas falhadas. Tente novamente dentro de {minutes} min.',
     emailTaken: 'Já existe uma conta com este email.',
     invalidData: 'Alguns dados são inválidos. Verifique os campos e tente novamente.',
     slotTaken: 'Este horário acabou de ser ocupado. Escolha outro.',
+    hasUpcoming: 'Ainda tem marcações futuras. Cancele-as na Agenda antes de eliminar a conta.',
     actionFailed: 'Não foi possível concluir esta operação. Atualize a página e tente novamente.',
     loadFailed: 'Não foi possível carregar os dados.',
     unexpected: 'Ocorreu um erro inesperado. Tente novamente.',
@@ -224,12 +283,14 @@ const en: Translations = {
     agenda: 'Agenda',
     schedule: 'Working hours',
     admin: 'Professionals',
+    profile: 'My profile',
     logout: 'Sign out',
   },
   home: {
     titleStart: 'Your slot,',
     titleHighlight: 'no waiting.',
-    subtitle: 'Find barbers, beauticians and personal trainers and book your slot in just a few clicks.',
+    subtitle:
+      'Find barbers, beauticians and personal trainers and book your slot in just a few clicks.',
     bookCta: 'Book now',
     professionalCta: "I'm a professional",
     featuresLabel: 'Highlights',
@@ -258,7 +319,7 @@ const en: Translations = {
     phone: 'Phone',
     required: 'Required field',
     invalidEmail: 'Invalid email',
-    passwordMinLength: 'At least 8 characters',
+    passwordPolicy: 'At least 8 characters, with at least one letter and one number.',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
   },
@@ -289,7 +350,7 @@ const en: Translations = {
     subtitle: 'Pick a service to see the free slots.',
     categories: 'Categories',
     all: 'All',
-    search: 'Search services',
+    search: 'Search services or professionals',
     with: 'with',
     book: 'Book',
     empty: 'No services found.',
@@ -317,6 +378,11 @@ const en: Translations = {
     keep: 'Keep',
     cancelQuestion: 'Cancel this appointment?',
     cancelled: 'Appointment cancelled.',
+    cancelledBy: {
+      CUSTOMER: 'Cancelled by the customer',
+      PROFESSIONAL: 'Cancelled by the professional',
+      ADMIN: 'Cancelled by the administrator',
+    },
   },
   agenda: {
     title: 'Agenda',
@@ -325,12 +391,15 @@ const en: Translations = {
     toCloseHint: 'Already started: record whether the customer showed up.',
     upcoming: 'Upcoming',
     history: 'History',
-    emptyToClose: 'Nothing to close.',
+    emptyToClose:
+      'Nothing to close. Once their start time passes, appointments show up here so you can record whether the customer came or was a no-show.',
     emptyUpcoming: 'You have no upcoming appointments.',
     emptyHistory: 'No history yet.',
     confirm: 'Confirm',
     complete: 'Complete',
     noShow: 'No-show',
+    cancelReason: 'Reason for cancelling',
+    cancelReasonHint: 'The customer will see this reason.',
     customer: 'Customer',
     updated: {
       confirm: 'Appointment confirmed.',
@@ -356,7 +425,8 @@ const en: Translations = {
   },
   admin: {
     title: 'Professionals',
-    subtitle: 'Approve people who signed up as professionals. Only approved ones can sign in and take bookings.',
+    subtitle:
+      'Approve people who signed up as professionals. Only approved ones can sign in and take bookings.',
     filterLabel: 'Approval status',
     tabs: {
       PENDING: 'Pending',
@@ -375,6 +445,50 @@ const en: Translations = {
     updated: {
       approve: '{name} was approved.',
       reject: '{name} was rejected.',
+    },
+  },
+  profile: {
+    title: 'My profile',
+    subtitle: 'Manage your personal details, sign-in email and password.',
+    summary: 'Account summary',
+    memberSince: 'member since',
+    save: 'Save changes',
+    discard: 'Discard',
+    currentPassword: 'Current password',
+    wrongPassword: 'The current password is incorrect.',
+    sessionsNote: 'For your security, sessions open on other devices are signed out.',
+    details: {
+      title: 'Personal details',
+      description: 'Your name is shown on your appointments.',
+      saved: 'Details saved.',
+    },
+    email: {
+      title: 'Sign-in email',
+      current: 'Current email:',
+      newEmail: 'New email',
+      sameEmail: 'This is already your email.',
+      submit: 'Change email',
+      saved: 'Email changed. Use the new email next time you sign in.',
+    },
+    password: {
+      title: 'Password',
+      newPassword: 'New password',
+      confirm: 'Confirm new password',
+      mismatch: 'The passwords do not match.',
+      sameAsCurrent: 'The new password must be different from the current one.',
+      submit: 'Change password',
+      saved: 'Password changed.',
+    },
+    delete: {
+      title: 'Delete account',
+      description:
+        'Your personal data is erased and you can no longer sign in. Upcoming appointments are cancelled; the history stays anonymous for the professional.',
+      professionalNote:
+        'Before deleting your account, cancel your upcoming appointments in the Agenda. Your services stop being available.',
+      adminNotAllowed: 'Administrator accounts cannot be deleted from the profile.',
+      understood: 'I understand this is permanent and cannot be undone.',
+      submit: 'Delete my account',
+      done: 'Your account has been deleted.',
     },
   },
   days: {
@@ -406,11 +520,14 @@ const en: Translations = {
   errors: {
     network: 'Could not reach the server. If the API is waking up, wait a minute and try again.',
     invalidCredentials: 'Incorrect email or password.',
-    accountBlocked: 'This account cannot sign in yet: it is awaiting approval, was rejected or is disabled.',
+    accountBlocked:
+      'This account cannot sign in yet: it is awaiting approval, was rejected or is disabled.',
     tooManyAttempts: 'Too many failed attempts. Try again in {minutes} min.',
     emailTaken: 'An account with this email already exists.',
     invalidData: 'Some details are invalid. Check the fields and try again.',
     slotTaken: 'This slot was just taken. Please pick another one.',
+    hasUpcoming:
+      'You still have upcoming appointments. Cancel them in the Agenda before deleting your account.',
     actionFailed: 'This action could not be completed. Refresh the page and try again.',
     loadFailed: 'Could not load the data.',
     unexpected: 'Something went wrong. Please try again.',

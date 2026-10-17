@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 import { apiErrorMessage } from '../../core/api/api-error';
 import { Auth } from '../../core/auth/auth';
+import { strongPassword } from '../../core/auth/password.validators';
 import { I18n } from '../../core/i18n/i18n';
 
 type AccountType = 'customer' | 'professional';
@@ -38,7 +39,8 @@ export class Register {
   protected readonly form = inject(NonNullableFormBuilder).group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    // Mesma política da API: sem ela, o registo falhava só depois de enviar
+    password: ['', [Validators.required, strongPassword]],
     phone: ['', Validators.required],
   });
 

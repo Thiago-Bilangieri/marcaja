@@ -9,7 +9,7 @@ import { Translations } from '../i18n/translations';
 export function apiErrorMessage(
   error: unknown,
   t: Translations,
-  context: 'login' | 'register' | 'booking' | 'schedule' | 'admin',
+  context: 'login' | 'register' | 'booking' | 'schedule' | 'admin' | 'email' | 'profile',
 ): string {
   if (!(error instanceof HttpErrorResponse)) {
     return t.errors.unexpected;
@@ -29,11 +29,14 @@ export function apiErrorMessage(
       if (context === 'booking') {
         return t.errors.actionFailed;
       }
-      // No registo, um 400 sem erros de campo é o email repetido (BusinessException na API)
-      return context === 'register' && !error.error?.errors ? t.errors.emailTaken : t.errors.invalidData;
+      // No registo e na mudança de email, um 400 sem erros de campo é o email repetido (BusinessException na API)
+      return (context === 'register' || context === 'email') && !error.error?.errors
+        ? t.errors.emailTaken
+        : t.errors.invalidData;
     case 409:
-      // Outro cliente ficou com o horário entre ver a disponibilidade e confirmar
-      return t.errors.slotTaken;
+      // Perfil: o profissional ainda tem marcações futuras e não pode eliminar a conta.
+      // Marcações: outro cliente ficou com o horário entre ver a disponibilidade e confirmar
+      return context === 'profile' ? t.errors.hasUpcoming : t.errors.slotTaken;
     case 401:
       return t.errors.invalidCredentials;
     case 403:
@@ -46,4 +49,15 @@ export function apiErrorMessage(
     default:
       return t.errors.unexpected;
   }
+}
+
+/**
+ * Erros de campo de um 400 da API (`{ errors: { campo: mensagem } }`), ou null se não houver.
+ * Serve para marcar o campo certo no formulário (ex.: palavra-passe atual incorreta).
+ */
+export function apiFieldErrors(error: unknown): Record<string, string> | null {
+  if (error instanceof HttpErrorResponse && error.status === 400 && error.error?.errors) {
+    return error.error.errors as Record<string, string>;
+  }
+  return null;
 }

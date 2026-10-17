@@ -1,0 +1,48 @@
+<section class="page profile-page">
+  <header class="page-header">
+    <h1>{{ t().profile.title }}</h1>
+    <p>{{ t().profile.subtitle }}</p>
+  </header>
+
+  @if (me.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="me.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (me.hasValue()) {
+    @let profile = me.value();
+
+    <section class="card summary" [attr.aria-label]="t().profile.summary">
+      <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+      <div class="summary-text">
+        <strong class="summary-name">{{ profile.name }}</strong>
+        <span>{{ profile.email }}</span>
+        <span class="muted">
+          {{ t().roles[profile.role] }} · {{ t().profile.memberSince }}
+          {{ profile.createdAt | date: 'MMMM y' : undefined : i18n.locale() }}
+        </span>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="details-title">
+      <mj-profile-details [profile]="profile" />
+    </section>
+
+    <section class="card" aria-labelledby="email-title">
+      <mj-change-email [profile]="profile" />
+    </section>
+
+    <section class="card" aria-labelledby="password-title">
+      <mj-change-password />
+    </section>
+
+    <section class="card danger-zone" aria-labelledby="delete-title">
+      <mj-delete-account [profile]="profile" />
+    </section>
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>

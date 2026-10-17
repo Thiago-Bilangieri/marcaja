@@ -1,0 +1,44 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.search {
+  width: 100%;
+  max-width: 420px;
+}
+
+.search-icon {
+  padding: 0 4px 0 12px;
+  color: var(--mj-text-muted);
+}
+
+// Profissional e datas lado a lado; em ecrãs estreitos, um por linha
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 720px;
+}
+
+.range-error {
+  color: var(--mat-sys-error);
+}
+
+.total {
+  margin: 0 0 12px;
+  color: var(--mj-text-muted);
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}

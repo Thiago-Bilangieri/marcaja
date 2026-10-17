@@ -21,33 +21,18 @@
           <mj-appointment-details [appointment]="appointment" />
           <div class="actions">
             @if (confirmingId() === appointment.id) {
-              @if (isCustomer()) {
-                <span>{{ t().appointments.cancelQuestion }}</span>
-              } @else {
-                <mat-form-field appearance="outline" class="reason" subscriptSizing="dynamic">
-                  <mat-label>{{ t().agenda.cancelReason }}</mat-label>
-                  <textarea
-                    matInput
-                    rows="2"
-                    maxlength="500"
-                    required
-                    [value]="cancelReason()"
-                    (input)="onReason($event)"
-                  ></textarea>
-                  <mat-hint>{{ t().agenda.cancelReasonHint }}</mat-hint>
-                </mat-form-field>
-              }
+              <span>{{ t().appointments.cancelQuestion }}</span>
               <button matButton (click)="confirmingId.set(null)">{{ t().appointments.keep }}</button>
               <button
                 matButton="filled"
                 class="danger"
-                [disabled]="cancellingId() === appointment.id || !canConfirm()"
+                [disabled]="cancellingId() === appointment.id"
                 (click)="cancel(appointment)"
               >
                 {{ t().appointments.confirmCancel }}
               </button>
             } @else {
-              <button matButton="outlined" (click)="askCancel(appointment)">
+              <button matButton="outlined" (click)="confirmingId.set(appointment.id)">
                 {{ t().appointments.cancel }}
               </button>
             }

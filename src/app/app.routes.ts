@@ -30,7 +30,7 @@ export const routes: Routes = [
   },
   {
     path: 'account',
-    canActivate: [authGuard, roleGuard('CUSTOMER', 'ADMIN')],
+    canActivate: [authGuard, roleGuard('CUSTOMER')],
     loadComponent: () => import('./pages/account/account').then((m) => m.Account),
   },
   // Perfil: igual para os três perfis (dados, email, palavra-passe, eliminar conta)
@@ -60,6 +60,13 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [authGuard, roleGuard('ADMIN')],
     loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin),
+  },
+  // Todas as marcações, com filtros (o cliente vê só as suas em /account)
+  {
+    path: 'admin/appointments',
+    canActivate: [authGuard, roleGuard('ADMIN')],
+    loadComponent: () =>
+      import('./pages/admin/admin-appointments').then((m) => m.AdminAppointments),
   },
   // Qualquer endereço desconhecido volta à página inicial
   { path: '**', redirectTo: '' },

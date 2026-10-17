@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { Booking } from './booking';
 import {
   Appointment,
+  AppointmentFilter,
   AppointmentStatus,
   canCancel,
   canConfirm,
@@ -95,6 +96,35 @@ describe('Booking', () => {
 
     await TestBed.inject(ApplicationRef).whenStable();
     expect(services.hasValue()).toBe(true);
+  });
+
+  it('appointments() sends the admin filters and stays idle without a filter', () => {
+    const filter = signal<AppointmentFilter | undefined>({
+      status: ['SCHEDULED', 'CONFIRMED'],
+      professionalId: 4,
+      from: '2026-10-01',
+      to: '',
+      q: ' joao ',
+      page: 2,
+    });
+    TestBed.runInInjectionContext(() => booking.appointments(filter));
+
+    TestBed.tick();
+    const request = http.expectOne((r) => r.url === `${API}/appointments`);
+    const params = request.request.params;
+    expect(params.getAll('status')).toEqual(['SCHEDULED', 'CONFIRMED']);
+    expect(params.get('professionalId')).toBe('4');
+    expect(params.get('from')).toBe('2026-10-01');
+    expect(params.has('to')).toBe(false);
+    expect(params.get('q')).toBe('joao');
+    expect(params.get('page')).toBe('2');
+    expect(params.get('sort')).toBe('startAt,desc');
+    request.flush({ content: [], page: { size: 20, number: 2, totalElements: 0, totalPages: 0 } });
+
+    // Período inválido: o componente passa undefined e não sai pedido nenhum
+    filter.set(undefined);
+    TestBed.tick();
+    http.expectNone((r) => r.url === `${API}/appointments`);
   });
 
   it('availability() waits until a day is picked', () => {

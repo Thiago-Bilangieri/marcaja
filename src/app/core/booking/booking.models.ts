@@ -56,6 +56,25 @@ export interface Appointment {
   cancellationReason: string | null;
 }
 
+export const APPOINTMENT_STATUSES: AppointmentStatus[] = [
+  'SCHEDULED',
+  'CONFIRMED',
+  'COMPLETED',
+  'CANCELLED',
+  'NO_SHOW',
+];
+
+// Filtros de GET /api/appointments (todos opcionais e combináveis). Datas "yyyy-MM-dd", inclusivas
+export interface AppointmentFilter {
+  status: AppointmentStatus[];
+  professionalId: number | null;
+  from: string;
+  to: string;
+  // Texto livre: nome do cliente, do profissional ou do serviço, sem distinguir acentos
+  q: string;
+  page: number;
+}
+
 export interface AppointmentCreateRequest {
   serviceId: number;
   startAt: string;

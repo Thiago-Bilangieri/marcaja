@@ -1,0 +1,149 @@
+<section class="page">
+  <header class="page-header">
+    <h1>{{ t().adminAppointments.title }}</h1>
+    <p>{{ t().adminAppointments.subtitle }}</p>
+  </header>
+
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search" subscriptSizing="dynamic">
+      <mat-label>{{ t().adminAppointments.search }}</mat-label>
+      <span matPrefix class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+      <input matInput type="search" [value]="query()" (input)="query.set(inputValue($event))" />
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ t().adminAppointments.professional }}</mat-label>
+        <mat-select [value]="professionalId()" (selectionChange)="professionalId.set($event.value)">
+          <mat-option [value]="null">{{ t().adminAppointments.allProfessionals }}</mat-option>
+          @if (professionals.hasValue()) {
+            @for (professional of professionals.value().content; track professional.id) {
+              <mat-option [value]="professional.id">{{ professional.name }}</mat-option>
+            }
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ t().adminAppointments.from }}</mat-label>
+        <input matInput type="date" [value]="from()" (input)="from.set(inputValue($event))" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ t().adminAppointments.to }}</mat-label>
+        <input matInput type="date" [value]="to()" (input)="to.set(inputValue($event))" />
+        @if (invalidRange()) {
+          <mat-hint class="range-error">{{ t().adminAppointments.invalidRange }}</mat-hint>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-chip-listbox
+      multiple
+      [attr.aria-label]="t().adminAppointments.statusLabel"
+      [value]="status()"
+      (change)="status.set($event.value ?? [])"
+    >
+      @for (s of statuses; track s) {
+        <mat-chip-option [value]="s">{{ t().status[s] }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
+
+    @if (hasFilters()) {
+      <button matButton class="clear" (click)="clearFilters()">
+        <span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span>
+        {{ t().adminAppointments.clear }}
+      </button>
+    }
+  </div>
+
+  @if (invalidRange()) {
+    <!-- Sem pedido à API: o aviso fica no campo "Até" -->
+  } @else if (appointments.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="appointments.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (appointments.hasValue()) {
+    @let result = appointments.value();
+    <p class="total" role="status">
+      {{ t().adminAppointments.total.replace('{count}', '' + result.page.totalElements) }}
+    </p>
+
+    <ul class="list">
+      @for (appointment of result.content; track appointment.id) {
+        <li class="item">
+          <mj-appointment-details [appointment]="appointment" [showBoth]="true" />
+          @if (canCancel(appointment)) {
+            <div class="actions">
+              @if (confirmingId() === appointment.id) {
+                <mat-form-field appearance="outline" class="reason" subscriptSizing="dynamic">
+                  <mat-label>{{ t().agenda.cancelReason }}</mat-label>
+                  <textarea
+                    matInput
+                    rows="2"
+                    maxlength="500"
+                    required
+                    [value]="cancelReason()"
+                    (input)="cancelReason.set(inputValue($event))"
+                  ></textarea>
+                  <mat-hint>{{ t().agenda.cancelReasonHint }}</mat-hint>
+                </mat-form-field>
+                <button matButton (click)="confirmingId.set(null)">
+                  {{ t().appointments.keep }}
+                </button>
+                <button
+                  matButton="filled"
+                  class="danger"
+                  [disabled]="busyId() === appointment.id || !hasReason()"
+                  (click)="cancel(appointment)"
+                >
+                  {{ t().appointments.confirmCancel }}
+                </button>
+              } @else {
+                <button matButton="outlined" (click)="askCancel(appointment)">
+                  {{ t().appointments.cancel }}
+                </button>
+              }
+            </div>
+          }
+        </li>
+      } @empty {
+        <li class="state">{{ t().adminAppointments.empty }}</li>
+      }
+    </ul>
+
+    @if (result.page.totalPages > 1) {
+      <nav class="pager" [attr.aria-label]="t().adminAppointments.pagination">
+        <button
+          matButton="outlined"
+          [disabled]="page() === 0"
+          (click)="page.set(page() - 1)"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+          {{ t().adminAppointments.previous }}
+        </button>
+        <span>
+          {{
+            t()
+              .adminAppointments.page.replace('{page}', '' + (page() + 1))
+              .replace('{pages}', '' + result.page.totalPages)
+          }}
+        </span>
+        <button
+          matButton="outlined"
+          [disabled]="page() + 1 >= result.page.totalPages"
+          (click)="page.set(page() + 1)"
+        >
+          {{ t().adminAppointments.next }}
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </button>
+      </nav>
+    }
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>

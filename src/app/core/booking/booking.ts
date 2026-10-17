@@ -6,6 +6,7 @@ import { Page } from '../api/page';
 import {
   Appointment,
   AppointmentCreateRequest,
+  AppointmentFilter,
   Category,
   ServiceFilter,
   ServiceItem,
@@ -15,7 +16,7 @@ import {
 } from './booking.models';
 
 /**
- * Serviços, horários livres e marcações do cliente.
+ * Serviços, horários livres e marcações (do cliente, ou todas para o ADMIN).
  *
  * Leituras usam httpResource: recebem uma função com signals e voltam a pedir à API
  * sempre que esses signals mudam (ex.: trocar a categoria). Têm de ser chamadas
@@ -65,6 +66,31 @@ export class Booking {
       url: `${this.api}/appointments`,
       params: { sort: 'startAt,desc', size: 100 },
     }));
+  }
+
+  // Todas as marcações (ADMIN), filtradas e paginadas na API.
+  // Sem filtro (undefined, ex.: período inválido), o resource fica parado e não faz pedido
+  appointments(filter: () => AppointmentFilter | undefined, pageSize = 20) {
+    return httpResource<Page<Appointment>>(() => {
+      const current = filter();
+      if (!current) {
+        return undefined;
+      }
+      const { status, professionalId, from, to, q, page } = current;
+      return {
+        url: `${this.api}/appointments`,
+        params: {
+          sort: 'startAt,desc',
+          size: pageSize,
+          page,
+          ...(status.length ? { status } : {}),
+          ...(professionalId ? { professionalId } : {}),
+          ...(from ? { from } : {}),
+          ...(to ? { to } : {}),
+          ...(q.trim() ? { q: q.trim() } : {}),
+        },
+      };
+    });
   }
 
   // Sem ID (undefined), o resource fica parado: o histórico só é pedido quando alguém o abre

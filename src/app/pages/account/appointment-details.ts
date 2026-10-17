@@ -6,6 +6,7 @@ import { AppointmentTimeline } from './appointment-timeline';
 
 // Detalhes de uma marcação; o componente pai passa os dados: <mj-appointment-details [appointment]="a" />
 // Na agenda do profissional: [showCustomer]="true" mostra o cliente em vez do profissional.
+// Nas marcações do ADMIN: [showBoth]="true" mostra os dois.
 @Component({
   imports: [DatePipe, AppointmentTimeline],
   selector: 'mj-appointment-details',
@@ -13,9 +14,10 @@ import { AppointmentTimeline } from './appointment-timeline';
     @let a = appointment();
     <span class="status" [attr.data-status]="a.status">{{ t().status[a.status] }}</span>
     <strong class="service">{{ a.serviceName }}</strong>
-    @if (showCustomer()) {
+    @if (showCustomer() || showBoth()) {
       <span class="muted">{{ t().agenda.customer }}: {{ a.customerName }}</span>
-    } @else {
+    }
+    @if (!showCustomer() || showBoth()) {
       <span class="muted">{{ t().services.with }} {{ a.professionalName }}</span>
     }
     <span class="when">
@@ -66,6 +68,7 @@ import { AppointmentTimeline } from './appointment-timeline';
 export class AppointmentDetails {
   readonly appointment = input.required<Appointment>();
   readonly showCustomer = input(false);
+  readonly showBoth = input(false);
   protected readonly i18n = inject(I18n);
   protected readonly t = this.i18n.t;
 }

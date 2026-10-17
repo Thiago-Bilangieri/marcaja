@@ -11,12 +11,13 @@
         <a matButton routerLink="/agenda">{{ t().app.agenda }}</a>
         <a matButton routerLink="/my-services">{{ t().app.myServices }}</a>
         <a matButton routerLink="/schedule">{{ t().app.schedule }}</a>
+      } @else if (isAdmin()) {
+        <a matButton routerLink="/services">{{ t().app.services }}</a>
+        <a matButton routerLink="/admin/appointments">{{ t().app.allAppointments }}</a>
+        <a matButton routerLink="/admin">{{ t().app.admin }}</a>
       } @else {
         <a matButton routerLink="/services">{{ t().app.services }}</a>
         <a matButton routerLink="/account">{{ t().app.appointments }}</a>
-      }
-      @if (isAdmin()) {
-        <a matButton routerLink="/admin">{{ t().app.admin }}</a>
       }
       <button matButton class="user-button" [matMenuTriggerFor]="userMenu">
         <span class="avatar" aria-hidden="true">{{ userInitials() }}</span>

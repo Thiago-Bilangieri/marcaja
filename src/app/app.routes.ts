@@ -46,6 +46,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/agenda/agenda').then((m) => m.Agenda),
   },
   {
+    path: 'my-services',
+    canActivate: [authGuard, roleGuard('PROFESSIONAL')],
+    loadComponent: () => import('./pages/my-services/my-services').then((m) => m.MyServices),
+  },
+  {
     path: 'schedule',
     canActivate: [authGuard, roleGuard('PROFESSIONAL')],
     loadComponent: () => import('./pages/schedule/schedule').then((m) => m.Schedule),

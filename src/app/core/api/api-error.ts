@@ -9,7 +9,8 @@ import { Translations } from '../i18n/translations';
 export function apiErrorMessage(
   error: unknown,
   t: Translations,
-  context: 'login' | 'register' | 'booking' | 'schedule' | 'admin' | 'email' | 'profile',
+  context:
+    'login' | 'register' | 'booking' | 'schedule' | 'admin' | 'email' | 'profile' | 'services',
 ): string {
   if (!(error instanceof HttpErrorResponse)) {
     return t.errors.unexpected;
@@ -29,6 +30,10 @@ export function apiErrorMessage(
       if (context === 'booking') {
         return t.errors.actionFailed;
       }
+      // Serviços do profissional: um 400 sem erros de campo é o nome repetido
+      if (context === 'services' && !error.error?.errors) {
+        return t.errors.serviceNameTaken;
+      }
       // No registo e na mudança de email, um 400 sem erros de campo é o email repetido (BusinessException na API)
       return (context === 'register' || context === 'email') && !error.error?.errors
         ? t.errors.emailTaken
@@ -36,6 +41,10 @@ export function apiErrorMessage(
     case 409:
       // Perfil: o profissional ainda tem marcações futuras e não pode eliminar a conta.
       // Marcações: outro cliente ficou com o horário entre ver a disponibilidade e confirmar
+      // Serviços: o serviço já tem marcações e não pode ser removido (só desativado)
+      if (context === 'services') {
+        return t.errors.serviceInUse;
+      }
       return context === 'profile' ? t.errors.hasUpcoming : t.errors.slotTaken;
     case 401:
       return t.errors.invalidCredentials;

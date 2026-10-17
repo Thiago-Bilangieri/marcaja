@@ -111,6 +111,18 @@ describe('Booking', () => {
     request.flush([]);
   });
 
+  it('history() only asks the API once an appointment id is given', () => {
+    const id = signal<number | undefined>(undefined);
+    TestBed.runInInjectionContext(() => booking.history(id));
+
+    TestBed.tick();
+    http.expectNone(() => true);
+
+    id.set(7);
+    TestBed.tick();
+    http.expectOne(`${API}/appointments/7/history`).flush([]);
+  });
+
   it('createAppointment and cancelAppointment call the right endpoints', () => {
     booking.createAppointment({ serviceId: 1, startAt: '2026-10-21T09:00:00' }).subscribe();
     const create = http.expectOne(`${API}/appointments`);

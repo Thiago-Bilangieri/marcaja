@@ -6,11 +6,13 @@
 
   <nav class="nav">
     @if (auth.isAuthenticated()) {
-      <a matButton routerLink="/services">{{ t().app.services }}</a>
       @if (isProfessional()) {
+        <!-- O catálogo de um profissional só mostraria os seus serviços: o link vai para a gestão -->
         <a matButton routerLink="/agenda">{{ t().app.agenda }}</a>
+        <a matButton routerLink="/my-services">{{ t().app.myServices }}</a>
         <a matButton routerLink="/schedule">{{ t().app.schedule }}</a>
       } @else {
+        <a matButton routerLink="/services">{{ t().app.services }}</a>
         <a matButton routerLink="/account">{{ t().app.appointments }}</a>
       }
       @if (isAdmin()) {

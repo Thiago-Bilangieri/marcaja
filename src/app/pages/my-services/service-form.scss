@@ -1,0 +1,22 @@
+h2 {
+  margin: 0 0 16px;
+  font-size: 1.125rem;
+}
+
+// Nome e descrição ocupam a linha inteira; categoria, preço e duração partilham uma linha
+form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  column-gap: 12px;
+}
+
+.full,
+.form-actions {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

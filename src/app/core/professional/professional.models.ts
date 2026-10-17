@@ -19,3 +19,14 @@ export interface WorkingHours {
   startTime: string;
   endTime: string;
 }
+
+// Corpo de POST/PUT /api/services. O ID do profissional não vai: a API usa o do token.
+// `active` só existe no PUT (um serviço novo nasce ativo).
+export interface ServiceRequest {
+  name: string;
+  description: string | null;
+  price: number;
+  durationMinutes: number;
+  categoryId: number | null;
+  active?: boolean;
+}

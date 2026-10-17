@@ -82,3 +82,13 @@ export function toIsoDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, '0');
   return `${date.getFullYear()}-${month}-${day}`;
 }
+
+// Uma entrada de GET /api/appointments/{id}/history. fromStatus null = criação da marcação
+export interface StatusChange {
+  fromStatus: AppointmentStatus | null;
+  toStatus: AppointmentStatus;
+  changedByName: string;
+  changedByRole: Role;
+  reason: string | null;
+  changedAt: string;
+}

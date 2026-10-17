@@ -1,0 +1,64 @@
+<h2 id="service-form-title">
+  {{ isNew() ? t().myServices.newTitle : t().myServices.editTitle }}
+</h2>
+
+@if (errorMessage(); as message) {
+  <p class="form-error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    {{ message }}
+  </p>
+}
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>{{ t().myServices.name }}</mat-label>
+    <input matInput formControlName="name" maxlength="100" />
+    @if (form.controls.name.hasError('required')) {
+      <mat-error>{{ t().form.required }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>{{ t().myServices.description }}</mat-label>
+    <textarea matInput rows="2" formControlName="description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{ t().myServices.category }}</mat-label>
+    <mat-select formControlName="categoryId">
+      <mat-option [value]="null">{{ t().myServices.noCategory }}</mat-option>
+      @for (category of categories(); track category.id) {
+        <mat-option [value]="category.id">{{ category.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{ t().myServices.price }}</mat-label>
+    <input matInput type="number" min="0.01" step="0.50" formControlName="price" />
+    <span matTextSuffix>€</span>
+    @if (form.controls.price.hasError('required')) {
+      <mat-error>{{ t().form.required }}</mat-error>
+    } @else if (form.controls.price.hasError('min')) {
+      <mat-error>{{ t().myServices.priceMin }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{ t().myServices.duration }}</mat-label>
+    <input matInput type="number" min="5" step="5" formControlName="durationMinutes" />
+    <span matTextSuffix>min</span>
+    @if (form.controls.durationMinutes.hasError('required')) {
+      <mat-error>{{ t().form.required }}</mat-error>
+    } @else if (form.controls.durationMinutes.hasError('min')) {
+      <mat-error>{{ t().myServices.durationMin }}</mat-error>
+    }
+  </mat-form-field>
+
+  <div class="form-actions">
+    <button matButton type="button" (click)="cancelled.emit()">{{ t().common.cancel }}</button>
+    <button matButton="filled" type="submit" [disabled]="saving()">
+      {{ isNew() ? t().myServices.create : t().myServices.save }}
+    </button>
+  </div>
+</form>

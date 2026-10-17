@@ -43,4 +43,37 @@ describe('Professional', () => {
     expect(request.request.body).toEqual({ hours: week });
     request.flush(week);
   });
+
+  it('manages the professional services through /api/services', () => {
+    const services = `${environment.apiUrl}/api/services`;
+    const body = {
+      name: 'Corte',
+      description: null,
+      price: 15,
+      durationMinutes: 30,
+      categoryId: 1,
+    };
+
+    TestBed.runInInjectionContext(() => professional.myServices());
+    TestBed.tick();
+    const list = http.expectOne((r) => r.url === services && r.method === 'GET');
+    expect(list.request.params.get('sort')).toBe('name');
+    list.flush({ content: [], page: { size: 100, number: 0, totalElements: 0, totalPages: 0 } });
+
+    professional.createService(body).subscribe();
+    const create = http.expectOne((r) => r.url === services && r.method === 'POST');
+    expect(create.request.body).toEqual(body);
+    create.flush({});
+
+    professional.updateService(3, { ...body, active: false }).subscribe();
+    const update = http.expectOne(`${services}/3`);
+    expect(update.request.method).toBe('PUT');
+    expect(update.request.body.active).toBe(false);
+    update.flush({});
+
+    professional.deleteService(3).subscribe();
+    const remove = http.expectOne(`${services}/3`);
+    expect(remove.request.method).toBe('DELETE');
+    remove.flush(null, { status: 204, statusText: 'No Content' });
+  });
 });

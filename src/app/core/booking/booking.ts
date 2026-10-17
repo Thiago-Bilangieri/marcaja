@@ -10,6 +10,7 @@ import {
   ServiceFilter,
   ServiceItem,
   StatusAction,
+  StatusChange,
   TimeSlot,
 } from './booking.models';
 
@@ -64,6 +65,14 @@ export class Booking {
       url: `${this.api}/appointments`,
       params: { sort: 'startAt,desc', size: 100 },
     }));
+  }
+
+  // Sem ID (undefined), o resource fica parado: o histórico só é pedido quando alguém o abre
+  history(id: () => number | undefined) {
+    return httpResource<StatusChange[]>(
+      () => (id() ? `${this.api}/appointments/${id()}/history` : undefined),
+      { defaultValue: [] },
+    );
   }
 
   createAppointment(request: AppointmentCreateRequest): Observable<Appointment> {

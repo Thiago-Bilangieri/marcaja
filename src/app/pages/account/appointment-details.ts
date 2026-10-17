@@ -2,11 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { Appointment } from '../../core/booking/booking.models';
 import { I18n } from '../../core/i18n/i18n';
+import { AppointmentTimeline } from './appointment-timeline';
 
 // Detalhes de uma marcação; o componente pai passa os dados: <mj-appointment-details [appointment]="a" />
 // Na agenda do profissional: [showCustomer]="true" mostra o cliente em vez do profissional.
 @Component({
-  imports: [DatePipe],
+  imports: [DatePipe, AppointmentTimeline],
   selector: 'mj-appointment-details',
   template: `
     @let a = appointment();
@@ -32,6 +33,7 @@ import { I18n } from '../../core/i18n/i18n';
         }
       </span>
     }
+    <mj-appointment-timeline [appointmentId]="a.id" />
   `,
   styles: `
     :host {

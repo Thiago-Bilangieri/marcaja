@@ -46,8 +46,10 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 - **Marcar**: escolher o dia (próximos 14 dias), ver os horários livres e confirmar com observações. Se outro cliente ocupar o horário entretanto (`409`), a lista atualiza-se e o utilizador é avisado.
 - **As minhas marcações**: próximas e histórico, com o estado de cada marcação e cancelamento com confirmação.
 - **Agenda do profissional**: marcações recebidas em três grupos (por fechar, próximas e histórico). Os botões Confirmar, Concluir, Falta e Cancelar só aparecem quando a API os permite (por exemplo, concluir só depois da hora de início). Cancelar pede um motivo, que o cliente vê na marcação ("Cancelada pelo profissional: ...").
+- **Os meus serviços** (profissional): criar, editar, ativar/desativar e remover serviços (nome, descrição, categoria, preço e duração). Um serviço com marcações não pode ser removido, só desativado, e a interface explica porquê.
 - **Horário de trabalho**: blocos por dia da semana (por exemplo, manhã e tarde), com validação no formulário (fim depois do início, sem blocos sobrepostos), guardados de uma vez.
 - **Menu e página inicial por perfil**: o cliente vai para as suas marcações e o profissional para a agenda; os endereços da outra área redirecionam.
+- **Histórico de cada marcação**: em "Ver histórico", a linha do tempo de estados (marcada, confirmada, cancelada...) com quem fez cada mudança, quando e o motivo. Só é pedido à API quando se abre.
 - **O meu perfil** (todos os perfis, a partir do menu da conta no cabeçalho): editar nome e telefone, mudar o email e a palavra-passe (pedem a palavra-passe atual; a API emite um token novo e termina as outras sessões) e eliminar a conta (RGPD: os dados pessoais são anonimizados, com confirmação explícita).
 - **Política de palavra-passe** igual à da API (8+ caracteres, letras e números), validada no formulário antes de enviar.
 
@@ -58,7 +60,7 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 - [x] **Fase 2:** área do cliente (serviços → disponibilidade → marcar → as minhas marcações → cancelar)
 - [x] **Fase 3:** área do profissional (confirmar, concluir, falta, horário de trabalho)
 - [x] **Fase 4:** área do administrador (aprovar profissionais)
-- [x] **Fase 4b:** perfil do utilizador (dados, email, palavra-passe, eliminar conta) e motivo de cancelamento
+- [x] **Fase 4b:** perfil do utilizador (dados, email, palavra-passe, eliminar conta), motivo de cancelamento, histórico das marcações e serviços do profissional
 - [ ] **Fase 5:** deploy (Vercel) ligado à API em produção
 
 ### Tecnologias e conceitos
@@ -133,6 +135,7 @@ src/
         ├── account/         # As minhas marcações (cliente)
         ├── agenda/          # Agenda do profissional: confirmar, concluir, falta, cancelar com motivo
         ├── profile/         # O meu perfil: uma secção (componente) por tarefa
+        ├── my-services/     # Serviços do profissional (lista + formulário de criar/editar)
         └── schedule/        # Horário de trabalho semanal (FormArray)
 ```
 
@@ -167,6 +170,8 @@ Tipografia: **Inter** · Ícones: **Material Symbols**
 - **Translated API errors**: wrong credentials, pending account, duplicated email, too many attempts (using `Retry-After`) and API unavailable.
 - **Customer area**: browse services by category or search by service or professional name (accent-insensitive), pick a day and a free slot, book with notes, see upcoming and past appointments and cancel them. A slot taken in the meantime (`409`) refreshes the list and warns the user.
 - **Professional area**: an agenda grouped into to close / upcoming / history, with confirm, complete, no-show and cancel shown only when the API allows them (cancelling asks for a reason the customer can see); a weekly working-hours editor with dynamic time blocks validated in the form (end after start, no overlaps).
+- **My services** (professional): create, edit, activate/deactivate and remove services. A service with bookings can only be deactivated, and the UI says why.
+- **Appointment history**: a timeline of status changes (booked, confirmed, cancelled...) with who did it, when and why, loaded only when opened.
 - **My profile** (every role, from the account menu in the header): edit name and phone, change email and password (both ask for the current password; the API issues a new token and signs out other sessions) and delete the account (GDPR: personal data is anonymised, with explicit confirmation). The password policy matches the API and is checked before submitting.
 
 ### Stack

@@ -1,0 +1,97 @@
+<section class="page">
+  <header class="page-header header-row">
+    <div>
+      <h1>{{ t().myServices.title }}</h1>
+      <p>{{ t().myServices.subtitle }}</p>
+    </div>
+    @if (editing() === null) {
+      <button matButton="filled" (click)="editing.set('new')">
+        <span class="material-symbols-outlined" aria-hidden="true">add</span>
+        {{ t().myServices.new }}
+      </button>
+    }
+  </header>
+
+  @if (editing() !== null) {
+    <section class="panel" aria-labelledby="service-form-title">
+      <mj-service-form
+        [service]="editingService()"
+        [categories]="categories.value()"
+        (saved)="onSaved()"
+        (cancelled)="editing.set(null)"
+      />
+    </section>
+  }
+
+  @if (services.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="services.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (services.hasValue()) {
+    <ul class="list">
+      @for (service of services.value().content; track service.id) {
+        <li class="item" [class.inactive]="!service.active">
+          <div class="info">
+            <span class="badge" [class.off]="!service.active">
+              {{ service.active ? t().myServices.active : t().myServices.inactive }}
+            </span>
+            <strong class="name">{{ service.name }}</strong>
+            <span class="muted">
+              {{ service.categoryName ?? t().myServices.noCategory }} ·
+              {{ service.durationMinutes }} min ·
+              {{ service.price | currency: 'EUR' : 'symbol' : '1.2-2' : i18n.locale() }}
+            </span>
+            @if (service.description) {
+              <span class="muted">{{ service.description }}</span>
+            }
+          </div>
+
+          <div class="actions">
+            @if (confirmingDeleteId() === service.id) {
+              <span>{{ t().myServices.removeQuestion }}</span>
+              <button matButton (click)="confirmingDeleteId.set(null)">
+                {{ t().appointments.keep }}
+              </button>
+              <button
+                matButton="filled"
+                class="danger"
+                [disabled]="busyId() === service.id"
+                (click)="remove(service)"
+              >
+                {{ t().myServices.confirmRemove }}
+              </button>
+            } @else {
+              <button
+                matButton
+                [disabled]="busyId() === service.id"
+                (click)="confirmingDeleteId.set(service.id)"
+              >
+                {{ t().myServices.remove }}
+              </button>
+              <button
+                matButton="outlined"
+                [disabled]="busyId() === service.id"
+                (click)="toggleActive(service)"
+              >
+                {{ service.active ? t().myServices.deactivate : t().myServices.activate }}
+              </button>
+              <button matButton="outlined" (click)="editing.set(service)">
+                {{ t().myServices.edit }}
+              </button>
+            }
+          </div>
+        </li>
+      } @empty {
+        <li class="state">
+          <span>{{ t().myServices.empty }}</span>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>

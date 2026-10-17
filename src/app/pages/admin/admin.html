@@ -4,6 +4,9 @@
     <p>{{ t().admin.subtitle }}</p>
   </header>
 
+  <h2 class="section-title">{{ t().admin.professionalsTitle }}</h2>
+  <p class="hint">{{ t().admin.professionalsHint }}</p>
+
   <mat-button-toggle-group
     hideSingleSelectionIndicator
     [attr.aria-label]="t().admin.filterLabel"
@@ -65,4 +68,6 @@
       <span>{{ t().common.loading }}</span>
     </div>
   }
+
+  <mj-category-admin />
 </section>

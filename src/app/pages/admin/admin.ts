@@ -13,11 +13,19 @@ import {
 } from '../../core/admin/approvals.models';
 import { apiErrorMessage } from '../../core/api/api-error';
 import { I18n } from '../../core/i18n/i18n';
+import { CategoryAdmin } from './category-admin';
 
 // Aprovação de profissionais: um separador por estado. Nada é definitivo:
 // um rejeitado pode ser aprovado mais tarde e um aprovado pode perder o acesso.
+// Por baixo, a gestão das categorias do catálogo (mj-category-admin).
 @Component({
-  imports: [DatePipe, MatButtonModule, MatButtonToggleModule, MatProgressSpinnerModule],
+  imports: [
+    DatePipe,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatProgressSpinnerModule,
+    CategoryAdmin,
+  ],
   selector: 'mj-admin',
   styleUrls: ['../account/account.scss', './admin.scss'],
   templateUrl: './admin.html',

@@ -15,7 +15,7 @@ const ptPT = {
     agenda: 'Agenda',
     schedule: 'Horário',
     myServices: 'Os meus serviços',
-    admin: 'Profissionais',
+    admin: 'Administração',
     profile: 'O meu perfil',
     logout: 'Sair',
   },
@@ -166,6 +166,7 @@ const ptPT = {
     description: 'Descrição (opcional)',
     category: 'Categoria',
     noCategory: 'Sem categoria',
+    categoryHint: 'Não encontra a sua? Escolha "Sem categoria".',
     price: 'Preço',
     duration: 'Duração',
     priceMin: 'O preço tem de ser maior que zero.',
@@ -204,8 +205,10 @@ const ptPT = {
     keepBookings: 'As marcações já feitas não são alteradas.',
   },
   admin: {
-    title: 'Profissionais',
-    subtitle:
+    title: 'Administração',
+    subtitle: 'Aprove os profissionais e organize as categorias do catálogo.',
+    professionalsTitle: 'Profissionais',
+    professionalsHint:
       'Aprove quem se registou como profissional. Só os aprovados podem entrar e receber marcações.',
     filterLabel: 'Estado da aprovação',
     tabs: {
@@ -225,6 +228,26 @@ const ptPT = {
     updated: {
       approve: '{name} foi aprovado(a).',
       reject: '{name} foi rejeitado(a).',
+    },
+    categories: {
+      title: 'Categorias',
+      hint: 'Os profissionais escolhem uma destas categorias ao criar um serviço e os clientes usam-nas para filtrar o catálogo.',
+      new: 'Nova categoria',
+      newTitle: 'Nova categoria',
+      editTitle: 'Editar categoria',
+      name: 'Nome da categoria',
+      description: 'Descrição (opcional)',
+      create: 'Criar categoria',
+      save: 'Guardar alterações',
+      edit: 'Editar',
+      remove: 'Remover',
+      removeQuestion: 'Remover esta categoria?',
+      confirmRemove: 'Sim, remover',
+      keep: 'Manter',
+      empty: 'Ainda não há categorias.',
+      created: 'Categoria criada.',
+      saved: 'Categoria atualizada.',
+      removed: 'Categoria removida.',
     },
   },
   profile: {
@@ -311,6 +334,9 @@ const ptPT = {
     serviceNameTaken: 'Já tem um serviço com este nome.',
     serviceInUse:
       'Este serviço já tem marcações e não pode ser removido. Desative-o para deixar de aparecer no catálogo.',
+    categoryNameTaken: 'Já existe uma categoria com este nome.',
+    categoryInUse:
+      'Esta categoria tem serviços associados e não pode ser removida. Mude primeiro a categoria desses serviços.',
     hasUpcoming: 'Ainda tem marcações futuras. Cancele-as na Agenda antes de eliminar a conta.',
     actionFailed: 'Não foi possível concluir esta operação. Atualize a página e tente novamente.',
     loadFailed: 'Não foi possível carregar os dados.',
@@ -333,7 +359,7 @@ const en: Translations = {
     agenda: 'Agenda',
     schedule: 'Working hours',
     myServices: 'My services',
-    admin: 'Professionals',
+    admin: 'Admin',
     profile: 'My profile',
     logout: 'Sign out',
   },
@@ -481,6 +507,7 @@ const en: Translations = {
     description: 'Description (optional)',
     category: 'Category',
     noCategory: 'No category',
+    categoryHint: 'Can\'t find yours? Choose "No category".',
     price: 'Price',
     duration: 'Duration',
     priceMin: 'The price must be greater than zero.',
@@ -519,8 +546,10 @@ const en: Translations = {
     keepBookings: 'Existing bookings are not changed.',
   },
   admin: {
-    title: 'Professionals',
-    subtitle:
+    title: 'Administration',
+    subtitle: 'Approve professionals and organise the catalogue categories.',
+    professionalsTitle: 'Professionals',
+    professionalsHint:
       'Approve people who signed up as professionals. Only approved ones can sign in and take bookings.',
     filterLabel: 'Approval status',
     tabs: {
@@ -540,6 +569,26 @@ const en: Translations = {
     updated: {
       approve: '{name} was approved.',
       reject: '{name} was rejected.',
+    },
+    categories: {
+      title: 'Categories',
+      hint: 'Professionals pick one of these categories when creating a service, and customers use them to filter the catalogue.',
+      new: 'New category',
+      newTitle: 'New category',
+      editTitle: 'Edit category',
+      name: 'Category name',
+      description: 'Description (optional)',
+      create: 'Create category',
+      save: 'Save changes',
+      edit: 'Edit',
+      remove: 'Remove',
+      removeQuestion: 'Remove this category?',
+      confirmRemove: 'Yes, remove',
+      keep: 'Keep',
+      empty: 'There are no categories yet.',
+      created: 'Category created.',
+      saved: 'Category updated.',
+      removed: 'Category removed.',
     },
   },
   profile: {
@@ -625,6 +674,9 @@ const en: Translations = {
     serviceNameTaken: 'You already have a service with this name.',
     serviceInUse:
       'This service already has bookings and cannot be removed. Deactivate it to hide it from the catalogue.',
+    categoryNameTaken: 'A category with this name already exists.',
+    categoryInUse:
+      'This category has services and cannot be removed. Change the category of those services first.',
     hasUpcoming:
       'You still have upcoming appointments. Cancel them in the Agenda before deleting your account.',
     actionFailed: 'This action could not be completed. Refresh the page and try again.',

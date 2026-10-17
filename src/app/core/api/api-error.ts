@@ -10,7 +10,15 @@ export function apiErrorMessage(
   error: unknown,
   t: Translations,
   context:
-    'login' | 'register' | 'booking' | 'schedule' | 'admin' | 'email' | 'profile' | 'services',
+    | 'login'
+    | 'register'
+    | 'booking'
+    | 'schedule'
+    | 'admin'
+    | 'email'
+    | 'profile'
+    | 'services'
+    | 'categories',
 ): string {
   if (!(error instanceof HttpErrorResponse)) {
     return t.errors.unexpected;
@@ -34,6 +42,10 @@ export function apiErrorMessage(
       if (context === 'services' && !error.error?.errors) {
         return t.errors.serviceNameTaken;
       }
+      // Categorias (ADMIN): idem, já existe uma categoria com este nome
+      if (context === 'categories' && !error.error?.errors) {
+        return t.errors.categoryNameTaken;
+      }
       // No registo e na mudança de email, um 400 sem erros de campo é o email repetido (BusinessException na API)
       return (context === 'register' || context === 'email') && !error.error?.errors
         ? t.errors.emailTaken
@@ -44,6 +56,10 @@ export function apiErrorMessage(
       // Serviços: o serviço já tem marcações e não pode ser removido (só desativado)
       if (context === 'services') {
         return t.errors.serviceInUse;
+      }
+      // Categorias: ainda há serviços com esta categoria
+      if (context === 'categories') {
+        return t.errors.categoryInUse;
       }
       return context === 'profile' ? t.errors.hasUpcoming : t.errors.slotTaken;
     case 401:

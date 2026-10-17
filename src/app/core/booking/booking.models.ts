@@ -6,7 +6,13 @@ import { Role } from '../auth/auth.models';
 export interface Category {
   id: number;
   name: string;
-  description: string;
+  description: string | null;
+}
+
+// Corpo do POST/PUT /api/categories (só ADMIN)
+export interface CategoryRequest {
+  name: string;
+  description: string | null;
 }
 
 export interface ServiceItem {

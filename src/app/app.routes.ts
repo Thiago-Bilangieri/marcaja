@@ -44,6 +44,12 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard('PROFESSIONAL')],
     loadComponent: () => import('./pages/schedule/schedule').then((m) => m.Schedule),
   },
+  // Área do administrador: aprovar os profissionais que se registam
+  {
+    path: 'admin',
+    canActivate: [authGuard, roleGuard('ADMIN')],
+    loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin),
+  },
   // Qualquer endereço desconhecido volta à página inicial
   { path: '**', redirectTo: '' },
 ];

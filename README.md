@@ -55,7 +55,7 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 - [x] **Fase 1b:** login e registo (JWT, interceptor HTTP, guards), interface em PT e EN
 - [x] **Fase 2:** área do cliente (serviços → disponibilidade → marcar → as minhas marcações → cancelar)
 - [x] **Fase 3:** área do profissional (confirmar, concluir, falta, horário de trabalho)
-- [ ] **Fase 4:** área do administrador (aprovar profissionais)
+- [x] **Fase 4:** área do administrador (aprovar profissionais)
 - [ ] **Fase 5:** deploy (Vercel) ligado à API em produção
 
 ### Tecnologias e conceitos

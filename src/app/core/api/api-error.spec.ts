@@ -23,9 +23,9 @@ describe('apiErrorMessage', () => {
   it('maps booking errors', () => {
     expect(apiErrorMessage(httpError(409), t, 'booking')).toBe(t.errors.slotTaken);
     expect(apiErrorMessage(httpError(400, { detail: 'Fora do horário' }), t, 'booking')).toBe(
-      t.errors.bookingRejected,
+      t.errors.actionFailed,
     );
-    expect(apiErrorMessage(httpError(403), t, 'booking')).toBe(t.errors.bookingRejected);
+    expect(apiErrorMessage(httpError(403), t, 'booking')).toBe(t.errors.actionFailed);
   });
 
   it('tells a duplicated email apart from invalid fields on register', () => {

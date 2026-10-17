@@ -1,0 +1,13 @@
+mat-button-toggle-group {
+  margin-bottom: 16px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.muted {
+  color: var(--mj-text-muted);
+}

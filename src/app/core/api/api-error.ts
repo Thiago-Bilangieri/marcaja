@@ -9,10 +9,15 @@ import { Translations } from '../i18n/translations';
 export function apiErrorMessage(
   error: unknown,
   t: Translations,
-  context: 'login' | 'register' | 'booking' | 'schedule',
+  context: 'login' | 'register' | 'booking' | 'schedule' | 'admin',
 ): string {
   if (!(error instanceof HttpErrorResponse)) {
     return t.errors.unexpected;
+  }
+
+  // Aprovar/rejeitar: 404 (o profissional já não existe) ou 403 (sessão sem perfil ADMIN)
+  if (context === 'admin' && error.status !== 0) {
+    return t.errors.actionFailed;
   }
 
   switch (error.status) {
@@ -22,7 +27,7 @@ export function apiErrorMessage(
     case 400:
       // Marcações: regra de negócio (fora do horário de trabalho, já começou, serviço inativo...)
       if (context === 'booking') {
-        return t.errors.bookingRejected;
+        return t.errors.actionFailed;
       }
       // No registo, um 400 sem erros de campo é o email repetido (BusinessException na API)
       return context === 'register' && !error.error?.errors ? t.errors.emailTaken : t.errors.invalidData;
@@ -33,7 +38,7 @@ export function apiErrorMessage(
       return t.errors.invalidCredentials;
     case 403:
       // No login: conta pendente/rejeitada/desativada; nas marcações: sem permissão para esta ação
-      return context === 'booking' ? t.errors.bookingRejected : t.errors.accountBlocked;
+      return context === 'booking' ? t.errors.actionFailed : t.errors.accountBlocked;
     case 429: {
       const seconds = Number(error.headers.get('Retry-After')) || 900;
       return t.errors.tooManyAttempts.replace('{minutes}', String(Math.ceil(seconds / 60)));

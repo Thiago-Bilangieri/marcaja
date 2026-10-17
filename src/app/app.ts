@@ -18,7 +18,9 @@ export class App {
   protected readonly auth = inject(Auth);
   protected readonly t = this.i18n.t;
   protected readonly locales = LOCALES;
+  protected readonly year = new Date().getFullYear();
   protected readonly isProfessional = computed(() => this.auth.currentUser()?.role === 'PROFESSIONAL');
+  protected readonly isAdmin = computed(() => this.auth.currentUser()?.role === 'ADMIN');
 
   protected logout(): void {
     this.auth.logout();

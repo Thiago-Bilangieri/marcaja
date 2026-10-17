@@ -13,6 +13,9 @@
       } @else {
         <a matButton routerLink="/account">{{ t().app.appointments }}</a>
       }
+      @if (isAdmin()) {
+        <a matButton routerLink="/admin">{{ t().app.admin }}</a>
+      }
       <button matButton (click)="logout()">{{ t().app.logout }}</button>
     } @else {
       <a matButton routerLink="/login">{{ t().app.login }}</a>
@@ -38,5 +41,5 @@
 </main>
 
 <footer class="footer">
-  <p>{{ t().app.footer }}</p>
+  <p>© {{ year }} MarcaJá · {{ t().app.footer }}</p>
 </footer>

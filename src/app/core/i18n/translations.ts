@@ -6,7 +6,7 @@ const ptPT = {
   app: {
     title: 'MarcaJá · O seu horário, sem espera',
     homeLabel: 'MarcaJá, página inicial',
-    footer: 'MarcaJá · projeto de portfólio · Angular + Spring Boot',
+    footer: 'O seu horário, sem espera.',
     language: 'Idioma',
     login: 'Entrar',
     register: 'Criar conta',
@@ -14,6 +14,7 @@ const ptPT = {
     appointments: 'As minhas marcações',
     agenda: 'Agenda',
     schedule: 'Horário',
+    admin: 'Profissionais',
     logout: 'Sair',
   },
   home: {
@@ -145,6 +146,29 @@ const ptPT = {
     saved: 'Horário guardado.',
     keepBookings: 'As marcações já feitas não são alteradas.',
   },
+  admin: {
+    title: 'Profissionais',
+    subtitle: 'Aprove quem se registou como profissional. Só os aprovados podem entrar e receber marcações.',
+    filterLabel: 'Estado da aprovação',
+    tabs: {
+      PENDING: 'Pendentes',
+      APPROVED: 'Aprovados',
+      REJECTED: 'Rejeitados',
+    },
+    empty: {
+      PENDING: 'Não há pedidos à espera de aprovação.',
+      APPROVED: 'Ainda não há profissionais aprovados.',
+      REJECTED: 'Não há profissionais rejeitados.',
+    },
+    registeredOn: 'Registado a',
+    approve: 'Aprovar',
+    reject: 'Rejeitar',
+    revoke: 'Retirar acesso',
+    updated: {
+      approve: '{name} foi aprovado(a).',
+      reject: '{name} foi rejeitado(a).',
+    },
+  },
   days: {
     MONDAY: 'Segunda-feira',
     TUESDAY: 'Terça-feira',
@@ -179,7 +203,7 @@ const ptPT = {
     emailTaken: 'Já existe uma conta com este email.',
     invalidData: 'Alguns dados são inválidos. Verifique os campos e tente novamente.',
     slotTaken: 'Este horário acabou de ser ocupado. Escolha outro.',
-    bookingRejected: 'Não foi possível concluir esta operação. Atualize a página e tente novamente.',
+    actionFailed: 'Não foi possível concluir esta operação. Atualize a página e tente novamente.',
     loadFailed: 'Não foi possível carregar os dados.',
     unexpected: 'Ocorreu um erro inesperado. Tente novamente.',
   },
@@ -191,7 +215,7 @@ const en: Translations = {
   app: {
     title: 'MarcaJá · Your slot, no waiting',
     homeLabel: 'MarcaJá, home page',
-    footer: 'MarcaJá · portfolio project · Angular + Spring Boot',
+    footer: 'Your slot, no waiting.',
     language: 'Language',
     login: 'Sign in',
     register: 'Sign up',
@@ -199,6 +223,7 @@ const en: Translations = {
     appointments: 'My appointments',
     agenda: 'Agenda',
     schedule: 'Working hours',
+    admin: 'Professionals',
     logout: 'Sign out',
   },
   home: {
@@ -329,6 +354,29 @@ const en: Translations = {
     saved: 'Working hours saved.',
     keepBookings: 'Existing bookings are not changed.',
   },
+  admin: {
+    title: 'Professionals',
+    subtitle: 'Approve people who signed up as professionals. Only approved ones can sign in and take bookings.',
+    filterLabel: 'Approval status',
+    tabs: {
+      PENDING: 'Pending',
+      APPROVED: 'Approved',
+      REJECTED: 'Rejected',
+    },
+    empty: {
+      PENDING: 'No requests awaiting approval.',
+      APPROVED: 'No approved professionals yet.',
+      REJECTED: 'No rejected professionals.',
+    },
+    registeredOn: 'Signed up on',
+    approve: 'Approve',
+    reject: 'Reject',
+    revoke: 'Revoke access',
+    updated: {
+      approve: '{name} was approved.',
+      reject: '{name} was rejected.',
+    },
+  },
   days: {
     MONDAY: 'Monday',
     TUESDAY: 'Tuesday',
@@ -363,7 +411,7 @@ const en: Translations = {
     emailTaken: 'An account with this email already exists.',
     invalidData: 'Some details are invalid. Check the fields and try again.',
     slotTaken: 'This slot was just taken. Please pick another one.',
-    bookingRejected: 'This action could not be completed. Refresh the page and try again.',
+    actionFailed: 'This action could not be completed. Refresh the page and try again.',
     loadFailed: 'Could not load the data.',
     unexpected: 'Something went wrong. Please try again.',
   },

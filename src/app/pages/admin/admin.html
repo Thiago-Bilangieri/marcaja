@@ -1,0 +1,68 @@
+<section class="page">
+  <header class="page-header">
+    <h1>{{ t().admin.title }}</h1>
+    <p>{{ t().admin.subtitle }}</p>
+  </header>
+
+  <mat-button-toggle-group
+    hideSingleSelectionIndicator
+    [attr.aria-label]="t().admin.filterLabel"
+    [value]="status()"
+    (change)="status.set($event.value)"
+  >
+    @for (s of statuses; track s) {
+      <mat-button-toggle [value]="s">{{ t().admin.tabs[s] }}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+
+  @if (professionals.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="professionals.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (professionals.hasValue()) {
+    <ul class="list">
+      @for (professional of professionals.value().content; track professional.id) {
+        <li class="item">
+          <div class="details">
+            <strong>{{ professional.name }}</strong>
+            <span class="muted">{{ professional.email }}</span>
+            <span class="muted">
+              {{ t().admin.registeredOn }} {{ professional.createdAt | date: 'd MMM y' : undefined : i18n.locale() }}
+            </span>
+          </div>
+          <div class="actions">
+            @let busy = busyId() === professional.id;
+            @switch (professional.approvalStatus) {
+              @case ('PENDING') {
+                <button matButton="outlined" [disabled]="busy" (click)="update(professional, 'reject')">
+                  {{ t().admin.reject }}
+                </button>
+                <button matButton="filled" [disabled]="busy" (click)="update(professional, 'approve')">
+                  {{ t().admin.approve }}
+                </button>
+              }
+              @case ('APPROVED') {
+                <button matButton="outlined" [disabled]="busy" (click)="update(professional, 'reject')">
+                  {{ t().admin.revoke }}
+                </button>
+              }
+              @case ('REJECTED') {
+                <button matButton="filled" [disabled]="busy" (click)="update(professional, 'approve')">
+                  {{ t().admin.approve }}
+                </button>
+              }
+            }
+          </div>
+        </li>
+      } @empty {
+        <li class="state">{{ t().admin.empty[status()] }}</li>
+      }
+    </ul>
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>

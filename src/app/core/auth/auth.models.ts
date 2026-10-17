@@ -28,7 +28,14 @@ export interface AuthResponse {
 
 // Página inicial de cada perfil depois de entrar (e para onde os guards redirecionam)
 export function homeFor(role: Role | undefined): string {
-  return role === 'PROFESSIONAL' ? '/agenda' : '/account';
+  switch (role) {
+    case 'PROFESSIONAL':
+      return '/agenda';
+    case 'ADMIN':
+      return '/admin';
+    default:
+      return '/account';
+  }
 }
 
 // Sessão guardada no navegador: a resposta do login + a expiração lida do JWT

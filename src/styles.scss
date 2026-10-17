@@ -1,1 +1,47 @@
-/* You can add global styles to this file, and also import other style files */
+// Tema do Angular Material (Material 3) gerado a partir das cores da marca MarcaJá.
+// As paletas ficam em styles/_theme-colors.scss (geradas com `ng generate @angular/material:theme-color`).
+// Saiba mais: https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+@use './styles/theme-colors' as marcaja;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: marcaja.$primary-palette,
+        tertiary: marcaja.$tertiary-palette,
+      ),
+      typography: Inter,
+      density: 0,
+    )
+  );
+}
+
+// Tokens da marca: use estas variáveis nos componentes em vez de repetir os hex.
+:root {
+  --mj-primary: #0f766e;
+  --mj-primary-hover: #115e59;
+  --mj-accent: #f25f4c;
+  --mj-background: #f8fafc;
+  --mj-surface: #ffffff;
+  --mj-text: #0f172a;
+  --mj-text-muted: #64748b;
+  --mj-border: #e2e8f0;
+
+  // Status dos agendamentos (enum AppointmentStatus da API)
+  --mj-status-scheduled: #d97706;
+  --mj-status-confirmed: #2563eb;
+  --mj-status-completed: #16a34a;
+  --mj-status-cancelled: #64748b;
+  --mj-status-no-show: #7c3aed;
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--mj-background);
+  color: var(--mj-text);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}

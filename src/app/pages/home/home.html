@@ -1,0 +1,23 @@
+<section class="hero">
+  <h1>Seu horário, <span class="highlight">sem espera.</span></h1>
+  <p class="subtitle">
+    Encontre barbeiros, esteticistas e personal trainers e marque o seu horário em poucos cliques.
+  </p>
+  <div class="actions">
+    <!-- Os botões ganham rota na próxima etapa (login e cadastro) -->
+    <button matButton="filled" class="cta">Marcar horário</button>
+    <button matButton="outlined">Sou profissional</button>
+  </div>
+</section>
+
+<section class="features" aria-label="Diferenciais">
+  @for (feature of features(); track feature.title) {
+    <mat-card appearance="outlined" class="feature">
+      <mat-card-content>
+        <span class="material-symbols-outlined feature-icon" aria-hidden="true">{{ feature.icon }}</span>
+        <h2>{{ feature.title }}</h2>
+        <p>{{ feature.description }}</p>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

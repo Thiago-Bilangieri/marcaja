@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.hero {
+  text-align: center;
+  padding: 32px 0 48px;
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 3.25rem);
+    line-height: 1.1;
+    margin: 0 0 16px;
+  }
+}
+
+.highlight {
+  color: var(--mj-primary);
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--mj-text-muted);
+  max-width: 560px;
+  margin: 0 auto 32px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+// Botão principal em coral (cor de destaque da marca).
+// Texto escuro: branco sobre coral não atinge o contraste mínimo WCAG AA (4.5:1).
+.cta {
+  --mat-button-filled-container-color: var(--mj-accent);
+  --mat-button-filled-label-text-color: var(--mj-text);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.feature {
+  background: var(--mj-surface);
+
+  h2 {
+    font-size: 1.125rem;
+    margin: 8px 0;
+  }
+
+  p {
+    margin: 0;
+    color: var(--mj-text-muted);
+  }
+}
+
+.feature-icon {
+  color: var(--mj-primary);
+  font-size: 32px;
+}

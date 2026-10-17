@@ -29,9 +29,13 @@ export class ChangeEmail {
 
   readonly profile = input.required<UserProfile>();
 
-  // A API normaliza o email (trim + minúsculas); comparamos da mesma forma
-  private readonly notCurrentEmail = (control: AbstractControl) =>
-    control.value?.trim().toLowerCase() === this.profile().email ? { sameEmail: true } : null;
+  // A API normaliza o email (trim + minúsculas); comparamos da mesma forma.
+  // O validador corre logo ao criar o formulário, antes de o input ter valor: com o campo
+  // vazio (o caso nesse momento) não lemos o profile() — o "obrigatório" já trata do vazio
+  private readonly notCurrentEmail = (control: AbstractControl) => {
+    const email = control.value?.trim().toLowerCase();
+    return email && email === this.profile().email ? { sameEmail: true } : null;
+  };
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     newEmail: ['', [Validators.required, Validators.email, this.notCurrentEmail]],

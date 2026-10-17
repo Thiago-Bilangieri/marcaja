@@ -1,5 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
@@ -12,7 +14,14 @@ import { AppointmentDetails } from './appointment-details';
 
 // As minhas marcações: próximas (com cancelar) e histórico
 @Component({
-  imports: [AppointmentDetails, MatButtonModule, MatProgressSpinnerModule, RouterLink],
+  imports: [
+    AppointmentDetails,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    RouterLink,
+  ],
   selector: 'mj-account',
   styleUrl: './account.scss',
   templateUrl: './account.html',
@@ -41,9 +50,24 @@ export class Account {
 
   protected readonly isCustomer = computed(() => this.auth.currentUser()?.role === 'CUSTOMER');
 
+  // O ADMIN tem de indicar o motivo ao cancelar (a API recusa sem ele); para o cliente é opcional
+  protected readonly cancelReason = signal('');
+  protected readonly canConfirm = computed(
+    () => this.isCustomer() || this.cancelReason().trim().length > 0,
+  );
+
+  protected askCancel(appointment: Appointment): void {
+    this.cancelReason.set('');
+    this.confirmingId.set(appointment.id);
+  }
+
+  protected onReason(event: Event): void {
+    this.cancelReason.set((event.target as HTMLTextAreaElement).value);
+  }
+
   protected cancel(appointment: Appointment): void {
     this.cancellingId.set(appointment.id);
-    this.booking.cancelAppointment(appointment.id).subscribe({
+    this.booking.cancelAppointment(appointment.id, this.cancelReason()).subscribe({
       next: () => {
         this.cancellingId.set(null);
         this.confirmingId.set(null);

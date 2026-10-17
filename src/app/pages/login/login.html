@@ -1,0 +1,57 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <h1>{{ t().login.title }}</h1>
+    <p>{{ t().login.subtitle }}</p>
+
+    @if (errorMessage(); as message) {
+      <p class="form-error" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">error</span>
+        {{ message }}
+      </p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ t().form.email }}</mat-label>
+        <input matInput type="email" formControlName="email" autocomplete="email" />
+        @if (form.controls.email.hasError('required')) {
+          <mat-error>{{ t().form.required }}</mat-error>
+        } @else if (form.controls.email.hasError('email')) {
+          <mat-error>{{ t().form.invalidEmail }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ t().form.password }}</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          formControlName="password"
+          autocomplete="current-password"
+        />
+        <button
+          matIconButton
+          matSuffix
+          type="button"
+          (click)="hidePassword.set(!hidePassword())"
+          [attr.aria-label]="hidePassword() ? t().form.showPassword : t().form.hidePassword"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">
+            {{ hidePassword() ? 'visibility' : 'visibility_off' }}
+          </span>
+        </button>
+        @if (form.controls.password.hasError('required')) {
+          <mat-error>{{ t().form.required }}</mat-error>
+        }
+      </mat-form-field>
+
+      <button matButton="filled" type="submit" [disabled]="loading()">{{ t().login.submit }}</button>
+    </form>
+
+    <p class="form-info">{{ t().login.demoHint }}</p>
+
+    <p class="auth-footer">
+      {{ t().login.noAccount }} <a routerLink="/register">{{ t().login.registerLink }}</a>
+    </p>
+  </div>
+</section>

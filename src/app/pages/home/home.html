@@ -1,17 +1,16 @@
 <section class="hero">
-  <h1>Seu horário, <span class="highlight">sem espera.</span></h1>
-  <p class="subtitle">
-    Encontre barbeiros, esteticistas e personal trainers e marque o seu horário em poucos cliques.
-  </p>
+  <h1>{{ t().home.titleStart }} <span class="highlight">{{ t().home.titleHighlight }}</span></h1>
+  <p class="subtitle">{{ t().home.subtitle }}</p>
   <div class="actions">
-    <!-- Os botões ganham rota na próxima etapa (login e cadastro) -->
-    <button matButton="filled" class="cta">Marcar horário</button>
-    <button matButton="outlined">Sou profissional</button>
+    <a matButton="filled" class="cta" routerLink="/register">{{ t().home.bookCta }}</a>
+    <a matButton="outlined" routerLink="/register" [queryParams]="{ type: 'professional' }">
+      {{ t().home.professionalCta }}
+    </a>
   </div>
 </section>
 
-<section class="features" aria-label="Diferenciais">
-  @for (feature of features(); track feature.title) {
+<section class="features" [attr.aria-label]="t().home.featuresLabel">
+  @for (feature of t().home.features; track feature.icon) {
     <mat-card appearance="outlined" class="feature">
       <mat-card-content>
         <span class="material-symbols-outlined feature-icon" aria-hidden="true">{{ feature.icon }}</span>

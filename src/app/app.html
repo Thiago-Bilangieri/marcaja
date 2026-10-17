@@ -1,8 +1,29 @@
 <header class="topbar">
-  <a class="logo" routerLink="/" aria-label="MarcaJá, página inicial">
+  <a class="logo" routerLink="/" [attr.aria-label]="t().app.homeLabel">
     <span class="material-symbols-outlined logo-icon" aria-hidden="true">event_available</span>
     <span>Marca<strong>Já</strong></span>
   </a>
+
+  <nav class="nav">
+    @if (auth.isAuthenticated()) {
+      <a matButton routerLink="/account">{{ t().app.account }}</a>
+      <button matButton (click)="logout()">{{ t().app.logout }}</button>
+    } @else {
+      <a matButton routerLink="/login">{{ t().app.login }}</a>
+      <a matButton="filled" routerLink="/register">{{ t().app.register }}</a>
+    }
+
+    <mat-button-toggle-group
+      hideSingleSelectionIndicator
+      [attr.aria-label]="t().app.language"
+      [value]="i18n.locale()"
+      (change)="i18n.setLocale($event.value)"
+    >
+      @for (locale of locales; track locale) {
+        <mat-button-toggle [value]="locale">{{ locale === 'en' ? 'EN' : 'PT' }}</mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+  </nav>
 </header>
 
 <main>
@@ -11,5 +32,5 @@
 </main>
 
 <footer class="footer">
-  <p>MarcaJá · projeto de portfólio · Angular + Spring Boot</p>
+  <p>{{ t().app.footer }}</p>
 </footer>

@@ -1,0 +1,96 @@
+<section class="page">
+  <a class="back-link" routerLink="/services">
+    <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+    {{ t().book.back }}
+  </a>
+
+  @if (service.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="service.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (service.hasValue()) {
+    @let s = service.value();
+    <header class="page-header">
+      <h1>{{ s.name }}</h1>
+      <p>
+        {{ t().services.with }} {{ s.professionalName }} · {{ s.durationMinutes }} min ·
+        {{ s.price | currency: 'EUR' : 'symbol' : '1.2-2' : i18n.locale() }}
+      </p>
+    </header>
+
+    <h2 class="step">{{ t().book.chooseDay }}</h2>
+    <div class="days" role="listbox" [attr.aria-label]="t().book.chooseDay">
+      @for (day of days; track day.iso) {
+        <button
+          type="button"
+          class="day"
+          role="option"
+          [class.selected]="selectedDay() === day.iso"
+          [attr.aria-selected]="selectedDay() === day.iso"
+          (click)="selectDay(day.iso)"
+        >
+          <span class="weekday">{{ day.date | date: 'EEE' : undefined : i18n.locale() }}</span>
+          <strong>{{ day.date | date: 'd' }}</strong>
+          <span class="month">{{ day.date | date: 'MMM' : undefined : i18n.locale() }}</span>
+        </button>
+      }
+    </div>
+
+    <h2 class="step">{{ t().book.chooseTime }}</h2>
+    @if (errorMessage(); as message) {
+      <p class="form-error" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">error</span>
+        {{ message }}
+      </p>
+    }
+
+    @if (!selectedDay()) {
+      <p class="hint">{{ t().book.pickDayFirst }}</p>
+    } @else if (slots.error()) {
+      <div class="state" role="alert">
+        <p>{{ t().errors.loadFailed }}</p>
+        <button matButton="outlined" (click)="slots.reload()">{{ t().common.retry }}</button>
+      </div>
+    } @else if (slots.isLoading()) {
+      <div class="state" role="status">
+        <mat-spinner diameter="32" />
+        <span>{{ t().common.loading }}</span>
+      </div>
+    } @else {
+      <div class="slots">
+        @for (slot of slots.value(); track slot.startAt) {
+          <button
+            type="button"
+            class="slot"
+            [class.selected]="selectedSlot()?.startAt === slot.startAt"
+            [attr.aria-pressed]="selectedSlot()?.startAt === slot.startAt"
+            (click)="selectedSlot.set(slot)"
+          >
+            {{ time(slot.startAt) }}
+          </button>
+        } @empty {
+          <p class="hint">{{ t().book.noSlots }}</p>
+        }
+      </div>
+    }
+
+    @if (selectedSlot(); as slot) {
+      <div class="confirm">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t().book.notes }}</mat-label>
+          <textarea matInput rows="2" maxlength="500" [value]="notes()" (input)="onNotes($event)"></textarea>
+        </mat-form-field>
+        <button matButton="filled" class="cta" [disabled]="saving()" (click)="confirm()">
+          {{ t().book.confirm }} ·
+          {{ slot.startAt | date: 'EEE d MMM' : undefined : i18n.locale() }}, {{ time(slot.startAt) }}
+        </button>
+      </div>
+    }
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>

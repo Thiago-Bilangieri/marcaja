@@ -20,6 +20,14 @@ describe('apiErrorMessage', () => {
     expect(apiErrorMessage(error, t, 'login')).toBe('Too many failed attempts. Try again in 10 min.');
   });
 
+  it('maps booking errors', () => {
+    expect(apiErrorMessage(httpError(409), t, 'booking')).toBe(t.errors.slotTaken);
+    expect(apiErrorMessage(httpError(400, { detail: 'Fora do horário' }), t, 'booking')).toBe(
+      t.errors.bookingRejected,
+    );
+    expect(apiErrorMessage(httpError(403), t, 'booking')).toBe(t.errors.bookingRejected);
+  });
+
   it('tells a duplicated email apart from invalid fields on register', () => {
     expect(apiErrorMessage(httpError(400, { detail: 'Já existe...' }), t, 'register')).toBe(t.errors.emailTaken);
     expect(apiErrorMessage(httpError(400, { errors: { email: 'Email inválido' } }), t, 'register')).toBe(

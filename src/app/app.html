@@ -6,7 +6,8 @@
 
   <nav class="nav">
     @if (auth.isAuthenticated()) {
-      <a matButton routerLink="/account">{{ t().app.account }}</a>
+      <a matButton routerLink="/services">{{ t().app.services }}</a>
+      <a matButton routerLink="/account">{{ t().app.appointments }}</a>
       <button matButton (click)="logout()">{{ t().app.logout }}</button>
     } @else {
       <a matButton routerLink="/login">{{ t().app.login }}</a>

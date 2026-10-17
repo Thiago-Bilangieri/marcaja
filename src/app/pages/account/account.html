@@ -1,0 +1,68 @@
+<section class="page">
+  <header class="page-header">
+    <h1>{{ t().appointments.title }}</h1>
+    @if (auth.currentUser(); as user) {
+      <p>
+        {{ t().appointments.signedInAs }} <strong>{{ user.email }}</strong> · {{ t().roles[user.role] }}
+      </p>
+    }
+  </header>
+
+  @if (appointments.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="appointments.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (appointments.hasValue()) {
+    <h2 class="section-title">{{ t().appointments.upcoming }}</h2>
+    <ul class="list">
+      @for (appointment of upcoming(); track appointment.id) {
+        <li class="item">
+          <mj-appointment-details [appointment]="appointment" />
+          <div class="actions">
+            @if (confirmingId() === appointment.id) {
+              <span>{{ t().appointments.cancelQuestion }}</span>
+              <button matButton (click)="confirmingId.set(null)">{{ t().appointments.keep }}</button>
+              <button
+                matButton="filled"
+                class="danger"
+                [disabled]="cancellingId() === appointment.id"
+                (click)="cancel(appointment)"
+              >
+                {{ t().appointments.confirmCancel }}
+              </button>
+            } @else {
+              <button matButton="outlined" (click)="confirmingId.set(appointment.id)">
+                {{ t().appointments.cancel }}
+              </button>
+            }
+          </div>
+        </li>
+      } @empty {
+        <li class="state">
+          <span>{{ t().appointments.emptyUpcoming }}</span>
+          @if (isCustomer()) {
+            <a matButton="filled" routerLink="/services">{{ t().appointments.bookNow }}</a>
+          }
+        </li>
+      }
+    </ul>
+
+    <h2 class="section-title">{{ t().appointments.history }}</h2>
+    <ul class="list">
+      @for (appointment of history(); track appointment.id) {
+        <li class="item">
+          <mj-appointment-details [appointment]="appointment" />
+        </li>
+      } @empty {
+        <li class="state">{{ t().appointments.emptyHistory }}</li>
+      }
+    </ul>
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>
+

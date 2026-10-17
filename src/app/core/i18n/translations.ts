@@ -1,5 +1,6 @@
 // Textos da aplicação em pt-PT e inglês.
 // O dicionário `en` tem o tipo de `ptPT`: se faltar ou sobrar uma chave, o TypeScript não compila.
+// Valores entre chaves, como {minutes}, são substituídos no código.
 
 const ptPT = {
   app: {
@@ -9,7 +10,8 @@ const ptPT = {
     language: 'Idioma',
     login: 'Entrar',
     register: 'Criar conta',
-    account: 'A minha conta',
+    services: 'Serviços',
+    appointments: 'As minhas marcações',
     logout: 'Sair',
   },
   home: {
@@ -71,16 +73,56 @@ const ptPT = {
       'A sua conta de profissional está a aguardar aprovação. Poderá entrar assim que um administrador a aprovar.',
     backHome: 'Voltar ao início',
   },
-  account: {
-    title: 'A minha conta',
+  services: {
+    title: 'Serviços',
+    subtitle: 'Escolha um serviço para ver os horários livres.',
+    categories: 'Categorias',
+    all: 'Todas',
+    search: 'Pesquisar serviço',
+    with: 'com',
+    book: 'Marcar',
+    empty: 'Nenhum serviço encontrado.',
+  },
+  book: {
+    back: 'Voltar aos serviços',
+    chooseDay: '1. Escolha o dia',
+    chooseTime: '2. Escolha a hora',
+    pickDayFirst: 'Escolha um dia para ver os horários livres.',
+    noSlots: 'Sem horários livres neste dia. Experimente outro dia.',
+    notes: 'Observações (opcional)',
+    confirm: 'Confirmar marcação',
+    success: 'Marcação feita!',
+  },
+  appointments: {
+    title: 'As minhas marcações',
     signedInAs: 'Sessão iniciada como',
-    role: 'Perfil',
-    comingSoon: 'A sua área está em construção: em breve poderá ver e gerir as suas marcações aqui.',
+    upcoming: 'Próximas',
+    history: 'Histórico',
+    emptyUpcoming: 'Não tem marcações futuras.',
+    emptyHistory: 'Ainda não tem histórico.',
+    bookNow: 'Marcar horário',
+    cancel: 'Cancelar',
+    confirmCancel: 'Sim, cancelar',
+    keep: 'Manter',
+    cancelQuestion: 'Cancelar esta marcação?',
+    cancelled: 'Marcação cancelada.',
+  },
+  status: {
+    SCHEDULED: 'Marcada',
+    CONFIRMED: 'Confirmada',
+    COMPLETED: 'Concluída',
+    CANCELLED: 'Cancelada',
+    NO_SHOW: 'Falta',
   },
   roles: {
     ADMIN: 'Administrador',
     PROFESSIONAL: 'Profissional',
     CUSTOMER: 'Cliente',
+  },
+  common: {
+    loading: 'A carregar…',
+    retry: 'Tentar novamente',
+    close: 'Fechar',
   },
   errors: {
     network: 'Não foi possível contactar o servidor. Se a API estiver a acordar, aguarde um minuto e tente novamente.',
@@ -89,6 +131,9 @@ const ptPT = {
     tooManyAttempts: 'Demasiadas tentativas falhadas. Tente novamente dentro de {minutes} min.',
     emailTaken: 'Já existe uma conta com este email.',
     invalidData: 'Alguns dados são inválidos. Verifique os campos e tente novamente.',
+    slotTaken: 'Este horário acabou de ser ocupado. Escolha outro.',
+    bookingRejected: 'Não foi possível concluir esta operação. Atualize a página e tente novamente.',
+    loadFailed: 'Não foi possível carregar os dados.',
     unexpected: 'Ocorreu um erro inesperado. Tente novamente.',
   },
 };
@@ -103,7 +148,8 @@ const en: Translations = {
     language: 'Language',
     login: 'Sign in',
     register: 'Sign up',
-    account: 'My account',
+    services: 'Services',
+    appointments: 'My appointments',
     logout: 'Sign out',
   },
   home: {
@@ -164,16 +210,56 @@ const en: Translations = {
       'Your professional account is awaiting approval. You can sign in as soon as an administrator approves it.',
     backHome: 'Back to home',
   },
-  account: {
-    title: 'My account',
+  services: {
+    title: 'Services',
+    subtitle: 'Pick a service to see the free slots.',
+    categories: 'Categories',
+    all: 'All',
+    search: 'Search services',
+    with: 'with',
+    book: 'Book',
+    empty: 'No services found.',
+  },
+  book: {
+    back: 'Back to services',
+    chooseDay: '1. Pick a day',
+    chooseTime: '2. Pick a time',
+    pickDayFirst: 'Pick a day to see the free slots.',
+    noSlots: 'No free slots on this day. Try another day.',
+    notes: 'Notes (optional)',
+    confirm: 'Confirm booking',
+    success: 'Booked!',
+  },
+  appointments: {
+    title: 'My appointments',
     signedInAs: 'Signed in as',
-    role: 'Role',
-    comingSoon: 'Your area is under construction: soon you will be able to see and manage your appointments here.',
+    upcoming: 'Upcoming',
+    history: 'History',
+    emptyUpcoming: 'You have no upcoming appointments.',
+    emptyHistory: 'No history yet.',
+    bookNow: 'Book now',
+    cancel: 'Cancel',
+    confirmCancel: 'Yes, cancel',
+    keep: 'Keep',
+    cancelQuestion: 'Cancel this appointment?',
+    cancelled: 'Appointment cancelled.',
+  },
+  status: {
+    SCHEDULED: 'Scheduled',
+    CONFIRMED: 'Confirmed',
+    COMPLETED: 'Completed',
+    CANCELLED: 'Cancelled',
+    NO_SHOW: 'No-show',
   },
   roles: {
     ADMIN: 'Administrator',
     PROFESSIONAL: 'Professional',
     CUSTOMER: 'Customer',
+  },
+  common: {
+    loading: 'Loading…',
+    retry: 'Try again',
+    close: 'Close',
   },
   errors: {
     network: 'Could not reach the server. If the API is waking up, wait a minute and try again.',
@@ -182,6 +268,9 @@ const en: Translations = {
     tooManyAttempts: 'Too many failed attempts. Try again in {minutes} min.',
     emailTaken: 'An account with this email already exists.',
     invalidData: 'Some details are invalid. Check the fields and try again.',
+    slotTaken: 'This slot was just taken. Please pick another one.',
+    bookingRejected: 'This action could not be completed. Refresh the page and try again.',
+    loadFailed: 'Could not load the data.',
     unexpected: 'Something went wrong. Please try again.',
   },
 };

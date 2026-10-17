@@ -1,0 +1,91 @@
+.step {
+  margin: 24px 0 12px;
+  font-size: 1.0625rem;
+}
+
+.hint {
+  color: var(--mj-text-muted);
+}
+
+// Faixa de dias com scroll horizontal (cabe em ecrãs pequenos)
+.days {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.day,
+.slot {
+  border: 1px solid var(--mj-border);
+  border-radius: 12px;
+  background: var(--mj-surface);
+  color: var(--mj-text);
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--mj-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mj-primary);
+    outline-offset: 2px;
+  }
+
+  &.selected {
+    border-color: var(--mj-primary);
+    background: var(--mj-primary);
+    color: #ffffff;
+
+    .weekday,
+    .month {
+      color: inherit;
+    }
+  }
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 64px;
+  padding: 8px 4px;
+
+  strong {
+    font-size: 1.25rem;
+  }
+}
+
+.weekday,
+.month {
+  font-size: 0.75rem;
+  color: var(--mj-text-muted);
+  text-transform: capitalize;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+}
+
+.slot {
+  padding: 10px 0;
+  font-weight: 600;
+}
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 480px;
+  margin-top: 24px;
+}
+
+// Mesmo botão coral da página inicial (texto escuro para contraste AA)
+.cta {
+  --mat-button-filled-container-color: var(--mj-accent);
+  --mat-button-filled-label-text-color: var(--mj-text);
+  height: 48px;
+}

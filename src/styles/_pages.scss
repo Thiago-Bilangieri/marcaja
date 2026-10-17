@@ -1,0 +1,66 @@
+// Layout partilhado pelas páginas de conteúdo (serviços, marcar, as minhas marcações)
+
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 4px;
+    font-size: 1.75rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--mj-text-muted);
+  }
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  color: var(--mj-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+// Carregamento, lista vazia e erro
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--mj-text-muted);
+}
+
+// Chip de estado de uma marcação: <span class="status" [attr.data-status]="status">
+.status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--mj-status-cancelled);
+
+  &[data-status='SCHEDULED'] {
+    background: #b45309; // âmbar mais escuro que o token: contraste AA com texto branco
+  }
+  &[data-status='CONFIRMED'] {
+    background: var(--mj-status-confirmed);
+  }
+  &[data-status='COMPLETED'] {
+    background: #15803d; // verde mais escuro que o token, pelo mesmo motivo
+  }
+  &[data-status='NO_SHOW'] {
+    background: var(--mj-status-no-show);
+  }
+}

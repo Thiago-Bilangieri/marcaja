@@ -42,12 +42,15 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 - **Login com JWT**: o token é guardado no navegador, enviado automaticamente nos pedidos à API e descartado quando expira.
 - **Rotas protegidas**: `/account` exige sessão; `/login` e `/register` redirecionam quem já tem sessão.
 - **Erros da API traduzidos**: credenciais erradas, conta pendente, email repetido, demasiadas tentativas (com o tempo de espera do `Retry-After`) e API indisponível.
+- **Serviços**: lista com filtro por categoria e pesquisa por nome, preço em euros e duração.
+- **Marcar**: escolher o dia (próximos 14 dias), ver os horários livres e confirmar com observações. Se outro cliente ocupar o horário entretanto (`409`), a lista atualiza-se e o utilizador é avisado.
+- **As minhas marcações**: próximas e histórico, com o estado de cada marcação e cancelamento com confirmação.
 
 ### Roadmap
 
 - [x] **Fase 1a:** projeto Angular, tema visual da marca e página inicial
 - [x] **Fase 1b:** login e registo (JWT, interceptor HTTP, guards), interface em PT e EN
-- [ ] **Fase 2:** área do cliente (profissionais → disponibilidade → marcar → as minhas marcações)
+- [x] **Fase 2:** área do cliente (serviços → disponibilidade → marcar → as minhas marcações → cancelar)
 - [ ] **Fase 3:** área do profissional (confirmar, concluir, falta, horário de trabalho)
 - [ ] **Fase 4:** área do administrador (aprovar profissionais)
 - [ ] **Fase 5:** deploy (Vercel) ligado à API em produção
@@ -58,6 +61,7 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 |---|---|
 | **Angular 22** | Standalone components, zoneless, novo control flow (`@if`, `@for`), lazy loading de rotas |
 | **Signals** | Estado da sessão e do idioma (`signal`, `computed`, `linkedSignal`, `effect`) |
+| **httpResource** | Leituras da API que voltam a pedir sozinhas quando um filtro (signal) muda |
 | **Reactive Forms** | Formulários de login e registo com validação |
 | **HttpClient + interceptor** | Envio do token JWT e fim de sessão automático no `401` |
 | **Guards** | `authGuard` e `guestGuard` nas rotas |
@@ -75,7 +79,7 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 docker compose --profile app up --build -d
 ```
 
-A API fica em `http://localhost:8080`, com dados de teste e CORS aberto para `http://localhost:4200`.
+A API fica em `http://localhost:8080`, com dados de teste e CORS aberto para `http://localhost:4200` (configuração de CORS a partir do [PR #2](https://github.com/Thiago-Bilangieri/agendamentos/pull/2)).
 
 **2. Front-end** (neste repositório):
 
@@ -102,20 +106,23 @@ O endereço da API está em `src/environments/` (`environment.development.ts` pa
 src/
 ├── environments/            # URL da API (desenvolvimento e produção)
 ├── styles.scss              # Tema do Material + tokens da marca (--mj-*)
-├── styles/                  # Paletas do tema e estilos das páginas de autenticação
+├── styles/                  # Paletas do tema e estilos partilhados das páginas
 └── app/
     ├── app.ts / app.html    # Layout: cabeçalho (sessão + idioma), <router-outlet>, rodapé
-    ├── app.config.ts        # Providers globais: router, HttpClient + interceptor
+    ├── app.config.ts        # Providers globais: router, HttpClient + interceptor, locale pt-PT
     ├── app.routes.ts        # Rotas com lazy loading e guards
     ├── core/
-    │   ├── auth/            # Serviço Auth, modelos, interceptor JWT, guards
-    │   ├── api/             # Tradução dos erros HTTP da API
+    │   ├── auth/            # Serviço Auth, modelos, interceptor JWT, guards (sessão e perfil)
+    │   ├── booking/         # Serviço Booking (httpResource) e regras das marcações
+    │   ├── api/             # Página genérica e tradução dos erros HTTP da API
     │   └── i18n/            # Serviço I18n e dicionários pt-PT / EN
     └── pages/
         ├── home/            # Página inicial
         ├── login/           # Entrar
         ├── register/        # Criar conta (cliente ou profissional)
-        └── account/         # A minha conta (protegida)
+        ├── services/        # Lista de serviços com filtros
+        ├── book/            # Escolher dia e hora e marcar
+        └── account/         # As minhas marcações (protegida)
 ```
 
 ### Identidade visual
@@ -147,6 +154,7 @@ Tipografia: **Inter** · Ícones: **Material Symbols**
 - **JWT sign-in**: the token is stored in the browser, attached to API requests by an HTTP interceptor and dropped when it expires.
 - **Protected routes** with `authGuard` / `guestGuard`.
 - **Translated API errors**: wrong credentials, pending account, duplicated email, too many attempts (using `Retry-After`) and API unavailable.
+- **Customer area**: browse services by category or name, pick a day and a free slot, book with notes, see upcoming and past appointments and cancel them. A slot taken in the meantime (`409`) refreshes the list and warns the user.
 
 ### Stack
 
@@ -169,7 +177,7 @@ Sign in with `joao.silva@email.com` / `password` (test customer).
 
 ### Roadmap
 
-Brand theme and home page ✅ → sign-in/sign-up with JWT, PT/EN UI ✅ → customer area → professional area → admin area → deploy.
+Brand theme and home page ✅ → sign-in/sign-up with JWT, PT/EN UI ✅ → customer area ✅ → professional area → admin area → deploy.
 
 ---
 

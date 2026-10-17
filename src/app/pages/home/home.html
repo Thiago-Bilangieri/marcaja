@@ -2,7 +2,8 @@
   <h1>{{ t().home.titleStart }} <span class="highlight">{{ t().home.titleHighlight }}</span></h1>
   <p class="subtitle">{{ t().home.subtitle }}</p>
   <div class="actions">
-    <a matButton="filled" class="cta" routerLink="/register">{{ t().home.bookCta }}</a>
+    <!-- Sem sessão, o authGuard leva ao login e depois volta aos serviços -->
+    <a matButton="filled" class="cta" routerLink="/services">{{ t().home.bookCta }}</a>
     <a matButton="outlined" routerLink="/register" [queryParams]="{ type: 'professional' }">
       {{ t().home.professionalCta }}
     </a>

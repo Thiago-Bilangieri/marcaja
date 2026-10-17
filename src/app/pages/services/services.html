@@ -1,0 +1,69 @@
+<section class="page">
+  <header class="page-header">
+    <h1>{{ t().services.title }}</h1>
+    <p>{{ t().services.subtitle }}</p>
+  </header>
+
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search" subscriptSizing="dynamic">
+      <mat-label>{{ t().services.search }}</mat-label>
+      <span matPrefix class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+      <input matInput type="search" [value]="query()" (input)="onSearch($event)" />
+    </mat-form-field>
+
+    <mat-chip-listbox
+      hideSingleSelectionIndicator
+      [attr.aria-label]="t().services.categories"
+      [value]="categoryId()"
+      (change)="categoryId.set($event.value ?? null)"
+    >
+      <mat-chip-option [value]="null">{{ t().services.all }}</mat-chip-option>
+      @if (categories.hasValue()) {
+        @for (category of categories.value(); track category.id) {
+          <mat-chip-option [value]="category.id">{{ category.name }}</mat-chip-option>
+        }
+      }
+    </mat-chip-listbox>
+  </div>
+
+  @if (services.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="services.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (services.hasValue()) {
+    <div class="grid">
+      @for (service of services.value().content; track service.id) {
+        <mat-card appearance="outlined" class="service">
+          <mat-card-content>
+            @if (service.categoryName) {
+              <span class="category">{{ service.categoryName }}</span>
+            }
+            <h2>{{ service.name }}</h2>
+            <p class="professional">{{ t().services.with }} {{ service.professionalName }}</p>
+            @if (service.description) {
+              <p class="description">{{ service.description }}</p>
+            }
+          </mat-card-content>
+          <mat-card-actions>
+            <span class="meta">
+              <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+              {{ service.durationMinutes }} min
+            </span>
+            <strong class="price">{{ service.price | currency: 'EUR' : 'symbol' : '1.2-2' : i18n.locale() }}</strong>
+            @if (canBook()) {
+              <a matButton="filled" [routerLink]="['/services', service.id, 'book']">{{ t().services.book }}</a>
+            }
+          </mat-card-actions>
+        </mat-card>
+      } @empty {
+        <p class="state">{{ t().services.empty }}</p>
+      }
+    </div>
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>

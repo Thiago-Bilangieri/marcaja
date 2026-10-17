@@ -1,0 +1,77 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.search {
+  width: 100%;
+  max-width: 420px;
+}
+
+.search-icon {
+  padding: 0 4px 0 12px;
+  color: var(--mj-text-muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  background: var(--mj-surface);
+
+  mat-card-content {
+    flex: 1;
+  }
+
+  h2 {
+    margin: 4px 0 0;
+    font-size: 1.125rem;
+  }
+}
+
+.category {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mj-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.professional {
+  margin: 2px 0 8px;
+  color: var(--mj-text-muted);
+}
+
+.description {
+  margin: 0;
+}
+
+mat-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 16px;
+}
+
+.meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--mj-text-muted);
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
+.price {
+  margin-right: auto;
+  font-size: 1.0625rem;
+}

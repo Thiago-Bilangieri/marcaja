@@ -9,7 +9,7 @@ import { Translations } from '../i18n/translations';
 export function apiErrorMessage(
   error: unknown,
   t: Translations,
-  context: 'login' | 'register' | 'booking',
+  context: 'login' | 'register' | 'booking' | 'schedule',
 ): string {
   if (!(error instanceof HttpErrorResponse)) {
     return t.errors.unexpected;

@@ -45,13 +45,16 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 - **Serviços**: lista com filtro por categoria e pesquisa por nome, preço em euros e duração.
 - **Marcar**: escolher o dia (próximos 14 dias), ver os horários livres e confirmar com observações. Se outro cliente ocupar o horário entretanto (`409`), a lista atualiza-se e o utilizador é avisado.
 - **As minhas marcações**: próximas e histórico, com o estado de cada marcação e cancelamento com confirmação.
+- **Agenda do profissional**: marcações recebidas em três grupos (por fechar, próximas e histórico). Os botões Confirmar, Concluir, Falta e Cancelar só aparecem quando a API os permite (por exemplo, concluir só depois da hora de início).
+- **Horário de trabalho**: blocos por dia da semana (por exemplo, manhã e tarde), com validação no formulário (fim depois do início, sem blocos sobrepostos), guardados de uma vez.
+- **Menu e página inicial por perfil**: o cliente vai para as suas marcações e o profissional para a agenda; os endereços da outra área redirecionam.
 
 ### Roadmap
 
 - [x] **Fase 1a:** projeto Angular, tema visual da marca e página inicial
 - [x] **Fase 1b:** login e registo (JWT, interceptor HTTP, guards), interface em PT e EN
 - [x] **Fase 2:** área do cliente (serviços → disponibilidade → marcar → as minhas marcações → cancelar)
-- [ ] **Fase 3:** área do profissional (confirmar, concluir, falta, horário de trabalho)
+- [x] **Fase 3:** área do profissional (confirmar, concluir, falta, horário de trabalho)
 - [ ] **Fase 4:** área do administrador (aprovar profissionais)
 - [ ] **Fase 5:** deploy (Vercel) ligado à API em produção
 
@@ -62,12 +65,12 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 | **Angular 22** | Standalone components, zoneless, novo control flow (`@if`, `@for`), lazy loading de rotas |
 | **Signals** | Estado da sessão e do idioma (`signal`, `computed`, `linkedSignal`, `effect`) |
 | **httpResource** | Leituras da API que voltam a pedir sozinhas quando um filtro (signal) muda |
-| **Reactive Forms** | Formulários de login e registo com validação |
+| **Reactive Forms** | Login e registo com validação; horário de trabalho com `FormArray` (blocos dinâmicos) e validadores próprios |
 | **HttpClient + interceptor** | Envio do token JWT e fim de sessão automático no `401` |
-| **Guards** | `authGuard` e `guestGuard` nas rotas |
+| **Guards** | `authGuard`, `guestGuard` e `roleGuard` (por perfil) nas rotas |
 | **i18n próprio e tipado** | Dicionários pt-PT/EN: se faltar uma tradução, o TypeScript não compila |
 | **Angular Material 3** | Componentes de UI com tema gerado a partir das cores da marca |
-| **Vitest** | Testes unitários (serviço de autenticação, interceptor, erros, idioma) |
+| **Vitest** | Testes unitários (autenticação, interceptor, erros, idioma, regras das marcações, validadores do horário) |
 
 ### Como executar
 
@@ -79,7 +82,7 @@ Os dois repositórios formam juntos uma aplicação **full-stack Java + Angular*
 docker compose --profile app up --build -d
 ```
 
-A API fica em `http://localhost:8080`, com dados de teste e CORS aberto para `http://localhost:4200` (configuração de CORS a partir do [PR #2](https://github.com/Thiago-Bilangieri/agendamentos/pull/2)).
+A API fica em `http://localhost:8080`, com dados de teste e CORS aberto para `http://localhost:4200`.
 
 **2. Front-end** (neste repositório):
 
@@ -90,7 +93,7 @@ npm install
 npm start
 ```
 
-Abra **http://localhost:4200** e entre com `joao.silva@email.com` / `password` (cliente de teste).
+Abra **http://localhost:4200** e entre com `joao.silva@email.com` / `password` (cliente de teste) ou `ana.ribeiro@agendamento.com` / `password` (profissional de teste).
 
 | Comando | O que faz |
 |---|---|
@@ -114,6 +117,7 @@ src/
     ├── core/
     │   ├── auth/            # Serviço Auth, modelos, interceptor JWT, guards (sessão e perfil)
     │   ├── booking/         # Serviço Booking (httpResource) e regras das marcações
+    │   ├── professional/    # Horário de trabalho do profissional (endpoints /me)
     │   ├── api/             # Página genérica e tradução dos erros HTTP da API
     │   └── i18n/            # Serviço I18n e dicionários pt-PT / EN
     └── pages/
@@ -122,7 +126,9 @@ src/
         ├── register/        # Criar conta (cliente ou profissional)
         ├── services/        # Lista de serviços com filtros
         ├── book/            # Escolher dia e hora e marcar
-        └── account/         # As minhas marcações (protegida)
+        ├── account/         # As minhas marcações (cliente)
+        ├── agenda/          # Agenda do profissional: confirmar, concluir, falta
+        └── schedule/        # Horário de trabalho semanal (FormArray)
 ```
 
 ### Identidade visual
@@ -152,13 +158,14 @@ Tipografia: **Inter** · Ícones: **Material Symbols**
 - **Portuguese (pt-PT) and English UI**, switchable from the header. The choice is saved in the browser; on the first visit it follows the system language.
 - **Customer sign-up** (signed in automatically) and **professional sign-up** (pending until approved).
 - **JWT sign-in**: the token is stored in the browser, attached to API requests by an HTTP interceptor and dropped when it expires.
-- **Protected routes** with `authGuard` / `guestGuard`.
+- **Protected routes** with `authGuard`, `guestGuard` and a role-based `roleGuard`; each role lands on its own home page.
 - **Translated API errors**: wrong credentials, pending account, duplicated email, too many attempts (using `Retry-After`) and API unavailable.
 - **Customer area**: browse services by category or name, pick a day and a free slot, book with notes, see upcoming and past appointments and cancel them. A slot taken in the meantime (`409`) refreshes the list and warns the user.
+- **Professional area**: an agenda grouped into to close / upcoming / history, with confirm, complete, no-show and cancel shown only when the API allows them; a weekly working-hours editor with dynamic time blocks validated in the form (end after start, no overlaps).
 
 ### Stack
 
-Angular 22 (standalone components, zoneless, signals, built-in control flow, lazy-loaded routes), Reactive Forms, HttpClient with a functional interceptor, a small typed i18n service, Angular Material 3 with a custom brand theme, TypeScript, SCSS and Vitest.
+Angular 22 (standalone components, zoneless, signals, built-in control flow, lazy-loaded routes), Reactive Forms (including `FormArray` and custom validators), HttpClient with a functional interceptor, a small typed i18n service, Angular Material 3 with a custom brand theme, TypeScript, SCSS and Vitest.
 
 ### Run locally
 
@@ -173,11 +180,11 @@ npm install
 npm start   # http://localhost:4200
 ```
 
-Sign in with `joao.silva@email.com` / `password` (test customer).
+Sign in with `joao.silva@email.com` / `password` (test customer) or `ana.ribeiro@agendamento.com` / `password` (test professional).
 
 ### Roadmap
 
-Brand theme and home page ✅ → sign-in/sign-up with JWT, PT/EN UI ✅ → customer area ✅ → professional area → admin area → deploy.
+Brand theme and home page ✅ → sign-in/sign-up with JWT, PT/EN UI ✅ → customer area ✅ → professional area ✅ → admin area → deploy.
 
 ---
 

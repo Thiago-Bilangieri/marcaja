@@ -1,0 +1,97 @@
+<section class="page">
+  <header class="page-header">
+    <h1>{{ t().agenda.title }}</h1>
+    <p>{{ t().agenda.subtitle }}</p>
+  </header>
+
+  @if (appointments.error()) {
+    <div class="state" role="alert">
+      <p>{{ t().errors.loadFailed }}</p>
+      <button matButton="outlined" (click)="appointments.reload()">{{ t().common.retry }}</button>
+    </div>
+  } @else if (appointments.hasValue()) {
+    <h2 class="section-title">{{ t().agenda.toClose }}</h2>
+    @if (toClose().length) {
+      <p class="hint">{{ t().agenda.toCloseHint }}</p>
+    }
+    <ul class="list">
+      @for (appointment of toClose(); track appointment.id) {
+        <li class="item">
+          <mj-appointment-details [appointment]="appointment" [showCustomer]="true" />
+          <div class="actions">
+            <button
+              matButton="outlined"
+              [disabled]="busyId() === appointment.id"
+              (click)="updateStatus(appointment, 'no-show')"
+            >
+              {{ t().agenda.noShow }}
+            </button>
+            <button
+              matButton="filled"
+              [disabled]="busyId() === appointment.id"
+              (click)="updateStatus(appointment, 'complete')"
+            >
+              {{ t().agenda.complete }}
+            </button>
+          </div>
+        </li>
+      } @empty {
+        <li class="state">{{ t().agenda.emptyToClose }}</li>
+      }
+    </ul>
+
+    <h2 class="section-title">{{ t().agenda.upcoming }}</h2>
+    <ul class="list">
+      @for (appointment of upcoming(); track appointment.id) {
+        <li class="item">
+          <mj-appointment-details [appointment]="appointment" [showCustomer]="true" />
+          <div class="actions">
+            @if (confirmingCancelId() === appointment.id) {
+              <span>{{ t().appointments.cancelQuestion }}</span>
+              <button matButton (click)="confirmingCancelId.set(null)">{{ t().appointments.keep }}</button>
+              <button
+                matButton="filled"
+                class="danger"
+                [disabled]="busyId() === appointment.id"
+                (click)="cancel(appointment)"
+              >
+                {{ t().appointments.confirmCancel }}
+              </button>
+            } @else {
+              <button matButton="outlined" (click)="confirmingCancelId.set(appointment.id)">
+                {{ t().appointments.cancel }}
+              </button>
+              @if (canConfirm(appointment)) {
+                <button
+                  matButton="filled"
+                  [disabled]="busyId() === appointment.id"
+                  (click)="updateStatus(appointment, 'confirm')"
+                >
+                  {{ t().agenda.confirm }}
+                </button>
+              }
+            }
+          </div>
+        </li>
+      } @empty {
+        <li class="state">{{ t().agenda.emptyUpcoming }}</li>
+      }
+    </ul>
+
+    <h2 class="section-title">{{ t().agenda.history }}</h2>
+    <ul class="list">
+      @for (appointment of history(); track appointment.id) {
+        <li class="item">
+          <mj-appointment-details [appointment]="appointment" [showCustomer]="true" />
+        </li>
+      } @empty {
+        <li class="state">{{ t().agenda.emptyHistory }}</li>
+      }
+    </ul>
+  } @else {
+    <div class="state" role="status">
+      <mat-spinner diameter="32" />
+      <span>{{ t().common.loading }}</span>
+    </div>
+  }
+</section>

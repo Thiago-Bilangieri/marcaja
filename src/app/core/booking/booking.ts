@@ -9,6 +9,7 @@ import {
   Category,
   ServiceFilter,
   ServiceItem,
+  StatusAction,
   TimeSlot,
 } from './booking.models';
 
@@ -71,5 +72,9 @@ export class Booking {
 
   cancelAppointment(id: number): Observable<Appointment> {
     return this.http.patch<Appointment>(`${this.api}/appointments/${id}/cancel`, null);
+  }
+
+  updateStatus(id: number, action: StatusAction): Observable<Appointment> {
+    return this.http.patch<Appointment>(`${this.api}/appointments/${id}/${action}`, null);
   }
 }

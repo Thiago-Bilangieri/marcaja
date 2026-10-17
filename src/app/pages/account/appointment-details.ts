@@ -4,6 +4,7 @@ import { Appointment } from '../../core/booking/booking.models';
 import { I18n } from '../../core/i18n/i18n';
 
 // Detalhes de uma marcação; o componente pai passa os dados: <mj-appointment-details [appointment]="a" />
+// Na agenda do profissional: [showCustomer]="true" mostra o cliente em vez do profissional.
 @Component({
   imports: [DatePipe],
   selector: 'mj-appointment-details',
@@ -11,7 +12,11 @@ import { I18n } from '../../core/i18n/i18n';
     @let a = appointment();
     <span class="status" [attr.data-status]="a.status">{{ t().status[a.status] }}</span>
     <strong class="service">{{ a.serviceName }}</strong>
-    <span class="muted">{{ t().services.with }} {{ a.professionalName }}</span>
+    @if (showCustomer()) {
+      <span class="muted">{{ t().agenda.customer }}: {{ a.customerName }}</span>
+    } @else {
+      <span class="muted">{{ t().services.with }} {{ a.professionalName }}</span>
+    }
     <span class="when">
       <span class="material-symbols-outlined" aria-hidden="true">event</span>
       {{ a.startAt | date: 'EEEE, d MMM y · HH:mm' : undefined : i18n.locale() }}
@@ -46,6 +51,7 @@ import { I18n } from '../../core/i18n/i18n';
 })
 export class AppointmentDetails {
   readonly appointment = input.required<Appointment>();
+  readonly showCustomer = input(false);
   protected readonly i18n = inject(I18n);
   protected readonly t = this.i18n.t;
 }

@@ -30,8 +30,19 @@ export const routes: Routes = [
   },
   {
     path: 'account',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard('CUSTOMER', 'ADMIN')],
     loadComponent: () => import('./pages/account/account').then((m) => m.Account),
+  },
+  // Área do profissional: um cliente que abra estes endereços é enviado para /account
+  {
+    path: 'agenda',
+    canActivate: [authGuard, roleGuard('PROFESSIONAL')],
+    loadComponent: () => import('./pages/agenda/agenda').then((m) => m.Agenda),
+  },
+  {
+    path: 'schedule',
+    canActivate: [authGuard, roleGuard('PROFESSIONAL')],
+    loadComponent: () => import('./pages/schedule/schedule').then((m) => m.Schedule),
   },
   // Qualquer endereço desconhecido volta à página inicial
   { path: '**', redirectTo: '' },

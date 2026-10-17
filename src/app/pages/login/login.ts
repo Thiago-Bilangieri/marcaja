@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 import { apiErrorMessage } from '../../core/api/api-error';
 import { Auth } from '../../core/auth/auth';
+import { homeFor } from '../../core/auth/auth.models';
 import { I18n } from '../../core/i18n/i18n';
 
 @Component({
@@ -52,9 +53,10 @@ export class Login {
     });
   }
 
-  // Só aceita caminhos internos ("/account"), nunca um site externo ("//site.com")
+  // Só aceita caminhos internos ("/account"), nunca um site externo ("//site.com").
+  // Sem returnUrl, vai para a página inicial do perfil (o cliente para /account, o profissional para /agenda).
   private safeReturnUrl(): string {
     const url = this.returnUrl();
-    return url?.startsWith('/') && !url.startsWith('//') ? url : '/account';
+    return url?.startsWith('/') && !url.startsWith('//') ? url : homeFor(this.auth.currentUser()?.role);
   }
 }

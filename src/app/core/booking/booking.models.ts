@@ -56,6 +56,20 @@ export function canCancel(appointment: Appointment, now: Date): boolean {
   return active && new Date(appointment.startAt) > now;
 }
 
+// Profissional: confirmar só faz sentido numa marcação ainda por confirmar e que não começou
+export function canConfirm(appointment: Appointment, now: Date): boolean {
+  return appointment.status === 'SCHEDULED' && new Date(appointment.startAt) > now;
+}
+
+// Profissional: concluir ou marcar falta só depois da hora de início (regra da API)
+export function canFinish(appointment: Appointment, now: Date): boolean {
+  const active = appointment.status === 'SCHEDULED' || appointment.status === 'CONFIRMED';
+  return active && new Date(appointment.startAt) <= now;
+}
+
+// Ações do profissional: cada uma é um PATCH /api/appointments/{id}/{ação}
+export type StatusAction = 'confirm' | 'complete' | 'no-show';
+
 // "2026-10-21" na hora local (toISOString() usaria UTC e podia mudar o dia)
 export function toIsoDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0');

@@ -26,6 +26,11 @@ export interface AuthResponse {
   role: Role;
 }
 
+// Página inicial de cada perfil depois de entrar (e para onde os guards redirecionam)
+export function homeFor(role: Role | undefined): string {
+  return role === 'PROFESSIONAL' ? '/agenda' : '/account';
+}
+
 // Sessão guardada no navegador: a resposta do login + a expiração lida do JWT
 export interface Session extends AuthResponse {
   expiresAt: number;

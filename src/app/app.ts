@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
@@ -18,6 +18,7 @@ export class App {
   protected readonly auth = inject(Auth);
   protected readonly t = this.i18n.t;
   protected readonly locales = LOCALES;
+  protected readonly isProfessional = computed(() => this.auth.currentUser()?.role === 'PROFESSIONAL');
 
   protected logout(): void {
     this.auth.logout();

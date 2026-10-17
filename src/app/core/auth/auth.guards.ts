@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Auth } from './auth';
-import { Role } from './auth.models';
+import { Role, homeFor } from './auth.models';
 
 // Páginas que exigem sessão: sem sessão, vai para o login e volta para cá depois de entrar
 export const authGuard: CanActivateFn = (_route, state) => {
@@ -15,7 +15,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
 export function roleGuard(...roles: Role[]): CanActivateFn {
   return () => {
     const role = inject(Auth).currentUser()?.role;
-    return role && roles.includes(role) ? true : inject(Router).createUrlTree(['/account']);
+    return role && roles.includes(role) ? true : inject(Router).createUrlTree([homeFor(role)]);
   };
 }
 
@@ -24,5 +24,5 @@ export const guestGuard: CanActivateFn = () => {
   const auth = inject(Auth);
   const router = inject(Router);
 
-  return auth.token() ? router.createUrlTree(['/account']) : true;
+  return auth.token() ? router.createUrlTree([homeFor(auth.currentUser()?.role)]) : true;
 };

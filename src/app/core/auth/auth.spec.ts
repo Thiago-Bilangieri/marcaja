@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { Auth } from './auth';
 import { authInterceptor } from './auth.interceptor';
+import { homeFor } from './auth.models';
 
 const API = `${environment.apiUrl}/api`;
 
@@ -14,6 +15,14 @@ function fakeJwt(expiresInSeconds: number): string {
   const exp = Math.floor(Date.now() / 1000) + expiresInSeconds;
   return `header.${btoa(JSON.stringify({ sub: 'joao@email.com', exp }))}.signature`;
 }
+
+describe('homeFor', () => {
+  it('sends professionals to their agenda and everyone else to their appointments', () => {
+    expect(homeFor('PROFESSIONAL')).toBe('/agenda');
+    expect(homeFor('CUSTOMER')).toBe('/account');
+    expect(homeFor(undefined)).toBe('/account');
+  });
+});
 
 describe('Auth', () => {
   let auth: Auth;

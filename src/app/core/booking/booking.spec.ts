@@ -4,7 +4,14 @@ import { ApplicationRef, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { Booking } from './booking';
-import { Appointment, AppointmentStatus, canCancel, toIsoDate } from './booking.models';
+import {
+  Appointment,
+  AppointmentStatus,
+  canCancel,
+  canConfirm,
+  canFinish,
+  toIsoDate,
+} from './booking.models';
 
 const API = `${environment.apiUrl}/api`;
 
@@ -31,6 +38,20 @@ describe('booking rules', () => {
     expect(canCancel(appointment('SCHEDULED', '2026-10-17T11:00:00'), now)).toBe(false);
     expect(canCancel(appointment('CANCELLED', '2026-10-18T10:00:00'), now)).toBe(false);
     expect(canCancel(appointment('COMPLETED', '2026-10-18T10:00:00'), now)).toBe(false);
+  });
+
+  it('canConfirm only scheduled appointments that have not started', () => {
+    expect(canConfirm(appointment('SCHEDULED', '2026-10-18T10:00:00'), now)).toBe(true);
+    expect(canConfirm(appointment('CONFIRMED', '2026-10-18T10:00:00'), now)).toBe(false);
+    expect(canConfirm(appointment('SCHEDULED', '2026-10-17T11:00:00'), now)).toBe(false);
+  });
+
+  it('canFinish only active appointments that have already started', () => {
+    expect(canFinish(appointment('SCHEDULED', '2026-10-17T11:00:00'), now)).toBe(true);
+    expect(canFinish(appointment('CONFIRMED', '2026-10-17T12:00:00'), now)).toBe(true);
+    expect(canFinish(appointment('CONFIRMED', '2026-10-17T12:30:00'), now)).toBe(false);
+    expect(canFinish(appointment('NO_SHOW', '2026-10-17T11:00:00'), now)).toBe(false);
+    expect(canFinish(appointment('CANCELLED', '2026-10-17T11:00:00'), now)).toBe(false);
   });
 
   it('toIsoDate keeps the local day', () => {
@@ -99,5 +120,14 @@ describe('Booking', () => {
     const cancel = http.expectOne(`${API}/appointments/7/cancel`);
     expect(cancel.request.method).toBe('PATCH');
     cancel.flush(appointment('CANCELLED', '2026-10-21T09:00:00'));
+  });
+
+  it('updateStatus sends a PATCH to the action endpoint', () => {
+    for (const action of ['confirm', 'complete', 'no-show'] as const) {
+      booking.updateStatus(7, action).subscribe();
+      const request = http.expectOne(`${API}/appointments/7/${action}`);
+      expect(request.request.method).toBe('PATCH');
+      request.flush(appointment('CONFIRMED', '2026-10-21T09:00:00'));
+    }
   });
 });

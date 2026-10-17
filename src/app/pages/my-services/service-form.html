@@ -23,7 +23,7 @@
     <textarea matInput rows="2" formControlName="description"></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
     <mat-label>{{ t().myServices.category }}</mat-label>
     <mat-select formControlName="categoryId">
       <mat-option [value]="null">{{ t().myServices.noCategory }}</mat-option>

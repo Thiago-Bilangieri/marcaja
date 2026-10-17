@@ -47,7 +47,8 @@
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <!-- dynamic: a regra da palavra-passe ocupa duas linhas e não pode tapar o campo seguinte -->
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <mat-label>{{ t().form.password }}</mat-label>
           <input
             matInput
